@@ -1,0 +1,158 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+<!— 网页标题  -->
+{% block title %}动态 @ 知否 - 单身俱乐部  {% endblock %}
+
+<!— 主体内容  -->
+{% block content %}
+    <a href="{% url "changepsd" %}">
+        <button style="background: orange">修改密码</button>
+    </a>
+
+    <div style="margin-bottom: 63px">
+        <div>
+            <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+            <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 10px">
+                待审核
+            </div>
+        </div>
+        {% for i in tochecklist %}
+
+            <div class="x" style="box-shadow:0 1px 1px rgba(0,0,0,0.1),0 6px 6px rgba(0,0,0,0.1);background: white">
+
+                <div
+                        {% ifequal i.gender '1' %}
+                            onclick="window.open('{% url "showMan" %}?myid={{ i.U_id_id }}&backpath={% url "log" %}','_self');"
+                        {% else %}
+                            onclick="window.open('{% url "showWoman" %}?myid={{ i.U_id_id }}&backpath={% url "log" %}','_self');"
+                        {% endifequal %}
+                ><img class="dosavatar" src="{{ MEDIA_URL }}{{ i.U_id.avatar }}"></div>
+
+                <div class="y grow" style="line-height: 45px;border-bottom: 1px solid rgba(49,83,128,0.1)">
+                    <div class="x lr" style="font-size: 12px;height: 30px;color: rgba(14,14,48,0.36)">
+                        <div>No.{{ i.U_id.id }} {{ i.nickname }} </div>
+
+                        <div>{{ i.truename }}</div>
+
+                        <div style="margin-right: 10px">{{ i.jointime }}</div>
+                    </div>
+                    <div class="textoverflow grow copy" data-clipboard-text="{{ i.wechat }}"
+                         style="width: 260px;color: rgba(14,14,48,0.52);font-size: 12px;">{{ i.phone }}
+                        &ensp;微信{{ i.wechat }}
+                    </div>
+
+                    <button id="pass{{ i.U_id_id }}">通过审核</button>
+
+                    <script>
+                        $("#pass{{ i.U_id_id }}").click(function () {
+                            var ex = prompt("请输入密码:");
+                            if (ex == "zf") {
+                                window.open('{% url "log" %}?action=pass&checkid={{ i.U_id_id }}','_self');
+                            } else {
+                                alert("密码错误，请重新输入！");
+                            }
+                        });
+                    </script>
+
+                </div>
+            </div>
+
+        {% endfor %}
+        <div>
+            <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+            <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 10px">
+                已审核 —— {{oknum}}人
+            </div>
+        </div>
+        {% for i in oklist %}
+
+            <div class="x"
+
+                    {% ifequal i.gender '1' %}
+                 onclick="window.open('{% url "showMan" %}?myid={{ i.U_id_id }}&backpath={% url "log" %}','_self');"
+                    {% else %}
+                 onclick="window.open('{% url "showWoman" %}?myid={{ i.U_id_id }}&backpath={% url "log" %}','_self');"
+                    {% endifequal %}
+
+
+                 style="box-shadow:0 1px 1px rgba(0,0,0,0.1),0 6px 6px rgba(0,0,0,0.1);background: white">
+                <div></div>
+                <div><img class="dosavatar" src="{{ MEDIA_URL }}{{ i.U_id.avatar }}"></div>
+
+                <div class="y grow" style="line-height: 45px;border-bottom: 1px solid rgba(49,83,128,0.1)">
+                    <div class="x lr" style="font-size: 12px;height: 30px;color: rgba(14,14,48,0.36)">
+                        <div>No.{{ i.U_id.id }} {{ i.nickname }} </div>
+
+                        <div>{{ i.truename }}</div>
+
+                        <div style="margin-right: 10px">{{ i.jointime }}</div>
+                    </div>
+                    <div class="textoverflow grow" style="width: 260px;color: rgba(14,14,48,0.52)">大家好，很高兴来到知否！</div>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+    <div class="tabbar x sq flexwidth">
+
+        <div class="tabbaritem notactive"
+             onclick="window.open('{% url 'matchlove' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/指示牌.png' %}"
+                      style="margin-left: 8px"></div>
+            <div class="bartext">寻觅</div>
+        </div>
+
+        <div class="tabbaritem notactive" onclick="window.open('{% url 'activity' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/干杯.png' %}"
+                      style="margin-left: 2px"></div>
+            <div class="bartext">活动</div>
+        </div>
+
+        <div class="tabbaritem notactive" onclick="window.open('{% url 'encounter' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/照片库.png' %}"
+                      style="margin-left: 5px"></div>
+            <div class="bartext">邂逅</div>
+        </div>
+
+
+        <div class="tabbaritem notactive" onclick="window.open('{% url 'me' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/知否.png' %}"></div>
+            <div class="bartext">知否</div>
+        </div>
+
+        <div class="tabbaritem ">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/动态.png' %}"
+                      style="margin-left: 2px"></div>
+            <div class="bartext">动态</div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+<!— 底部导航  -->
+{% block tabbar %}{% endblock %}
+
+<!— 本页脚本js  -->
+{% block myjs %}
+
+    <!-- 复制到剪贴板 -->
+    <script type="text/javascript" src="{% static 'js/clipboard.min.js' %}"></script>
+    <script>
+        var clipboard = new ClipboardJS('.copy');
+        clipboard.on('success', function (e) {
+            alert("微信号复制成功");
+        });
+        clipboard.on('error', function (e) {
+            console.log(e);
+        });
+
+
+    </script>
+
+
+
+
+{% endblock %}

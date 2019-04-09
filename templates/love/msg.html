@@ -1,0 +1,54 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+<!— 网页标题  -->
+{% block title %}信箱 @ 知否 - 单身俱乐部  {% endblock %}
+
+<!— 本页样式css  -->
+{% block mycss %}{% endblock %}
+
+<!— 顶部导航  -->
+{% block topnav %}{% endblock %}
+
+<!— 主体内容  -->
+{% block content %}
+    <style>
+    body{
+        background: url('{% static "love/images/chat.jpg" %}');
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    </style>
+
+    {% for i in msglist %}
+
+        <div class="x" onclick="window.open('{% url "chat" %}?myid={{ i.id }}&backpath2={% url "msg" %}','_self');"
+        style="box-shadow:0 1px 1px rgba(0,0,0,0.1),0 6px 6px rgba(0,0,0,0.1);background: white">
+
+            <div><img class="dosavatar" src="{{ MEDIA_URL }}{{ i.avatar }}"></div>
+
+            <div class="y grow" style="line-height: 45px;border-bottom: 1px solid rgba(49,83,128,0.1)">
+                <div class="x lr" style="font-size: 12px;height: 30px;color: rgba(14,14,48,0.36)">
+                <div >{{ i.nickname }} </div>
+
+                    <div style="margin-right: 10px">{{ i.lasttime }}</div>
+                </div>
+                <div class="textoverflow grow" style="width: 260px;color: rgba(14,14,48,0.52)">{{ i.lastmsg }}</div>
+            </div>
+        </div>
+
+    {% endfor %}
+    <!-- 底栏 -->
+    <div class="tabbar x flexwidth xcenter" style="background: dimgrey">
+        <div class="tabbaritem " onclick="window.open('/love/me','_self');">
+              <img class="baricon" src="{% static 'love/images/icon/关闭.png' %}">
+        </div>
+    </div>
+
+{% endblock %}
+
+<!— 底部导航  -->
+{% block tabbar %}{% endblock %}
+
+<!— 本页脚本js  -->
+{% block myjs %}{% endblock %}

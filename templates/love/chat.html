@@ -1,0 +1,292 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+<!— 网页标题  -->
+{% block title %}和{{ yourname }}聊天ing @ 知否  {% endblock %}
+
+<!— 本页样式css  -->
+{% block mycss %}
+
+    <style>
+
+        /*聊天气泡*/
+        .Chat_bubble_female_left {
+            width: 580px;
+            height: auto;
+            border: 2px solid crimson;
+            position: relative;
+            background-color: #FFF;
+            line-height: 20px;
+            padding: 10px;
+            font-size: 12px;
+            border-radius: 8px;
+            -moz-border-radius: 8px;
+            -webkit-border-radius: 8px;
+        }
+
+        .Chat_bubble_female_left:before, .Chat_bubble_female_left:after {
+            content: "";
+            display: block;
+            position: absolute;
+            right: 100%;
+            top: 5px;
+            border-right: 12px solid;
+            border-bottom: 12px solid;
+            border-color: transparent crimson transparent transparent;
+            font-size: 0;
+            line-height: 0;
+        }
+
+        .Chat_bubble_female_left:after {
+            top: 7px;
+            right: 97%;
+            border-color: transparent white transparent transparent;
+        }
+
+        .Chat_bubble_male_left {
+            width: 580px;
+            height: auto;
+            border: 2px solid #09F;
+            position: relative;
+            background-color: #FFF;
+            line-height: 20px;
+            padding: 10px;
+            font-size: 12px;
+            border-radius: 8px;
+            -moz-border-radius: 8px;
+            -webkit-border-radius: 8px;
+        }
+
+        .Chat_bubble_male_left:before, .Chat_bubble_male_left:after {
+            content: "";
+            display: block;
+            position: absolute;
+            right: 100%;
+            top: 5px;
+            border-right: 12px solid;
+            border-bottom: 12px solid;
+            border-color: transparent #09F transparent transparent;
+            font-size: 0;
+            line-height: 0;
+        }
+
+        .Chat_bubble_male_left:after {
+            top: 7px;
+            right: 98%;
+            border-color: transparent white transparent transparent;
+        }
+
+        .Chat_bubble_male_right {
+            width: 580px;
+            height: auto;
+            border: 2px solid #09F;
+            position: relative;
+            background-color: #FFF;
+            line-height: 20px;
+            padding: 10px;
+            font-size: 12px;
+            border-radius: 8px;
+            -moz-border-radius: 8px;
+            -webkit-border-radius: 8px;
+        }
+
+        .Chat_bubble_male_right:before, .Chat_bubble_male_right:after {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 100%;
+            top: 5px;
+            border-right: 12px solid;
+            border-top: 12px solid;
+            border-color: #09F transparent transparent transparent;
+            font-size: 0;
+            line-height: 0;
+        }
+
+        .Chat_bubble_male_right:after {
+            top: 7px;
+            left: 97%;
+            border-color: white transparent transparent transparent;
+        }
+
+
+        .Chat_bubble_female_right {
+            width: 580px;
+            height: auto;
+            border: 2px solid crimson;
+            position: relative;
+            background-color: #FFF;
+            line-height: 20px;
+            padding: 10px;
+            font-size: 12px;
+            border-radius: 8px;
+            -moz-border-radius: 8px;
+            -webkit-border-radius: 8px;
+        }
+
+        .Chat_bubble_female_right:before, .Chat_bubble_female_right:after {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 100%;
+            top: 5px;
+            border-right: 12px solid;
+            border-top: 12px solid;
+            border-color: crimson transparent transparent transparent;
+            font-size: 0;
+            line-height: 0;
+        }
+
+        .Chat_bubble_female_right:after {
+            top: 7px;
+            left: 98%;
+            border-color: white transparent transparent transparent;
+        }
+
+    </style>
+
+{% endblock %}
+
+<!— 顶部导航  -->
+{% block topnav %}{% endblock %}
+
+<!— 主体内容  -->
+{% block content %}
+
+    <style>
+        body {
+        {% if msglist %}
+            background: #ffd5d8;
+        {% else %}
+            background: url('{% static "love/images/chat.jpg" %}');
+        {% endif %}
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+    </style>
+
+          {% if showtips %}
+        <div style="color: white;text-align: center;background: rgba(14,14,48,0.69);line-height: 50px;height: 50px">密码错啦，快快私信我获取密码吧 ！</div>
+        {% endif %}
+
+    <div style="margin-bottom: 120px;margin-top: 10px;">
+
+
+
+        {% for msg in msglist %}
+            {% ifequal msg.sender_id myid %}
+                <!— 发信人-我  -->
+                <div style="text-align: right;">
+                    <div style="display: inline-block;">
+                        <div class="m5" style="text-align: right;font-size: 10px;">{{ msg.time }}</div>
+                        <div class="{% ifequal mygender '1' %}Chat_bubble_male_right {% else %} Chat_bubble_female_right {% endifequal %}"
+                             style="width:200px;text-align: left;white-space: pre-wrap;">{{ msg.content }}</div>
+                    </div>
+                    <div style="display: inline-block;vertical-align: top">
+                        <img class="dosavatar" style="width: 50px;margin-top: 5px;margin-left: 15px"
+                             src="{{ MEDIA_URL }}{{ myavatar }}"></div>
+                </div>
+            {% else %}
+                <!— 收信人-你  -->
+                <div class="x" style="cursor: pointer"
+                        {% ifequal yourgender '1' %}
+                     onclick="window.open('{% url 'showMan' %}?myid={{ yourid }}&backpath={% url "chat" %}','_self');"
+                        {% else %}
+                     onclick="window.open('{% url 'showWoman' %}?myid={{ yourid }}&backpath={% url "chat" %}','_self');"
+                        {% endifequal %}
+                >
+                    <div><img class="dosavatar" style="width: 50px;margin-top: 5px"
+                              src="{{ MEDIA_URL }}{{ youravatar }}"></div>
+                    <div style="display: inline-block;margin-left: 10px">
+                        <div class="m5" style="font-size: 10px;">{{ msg.time }}</div>
+                        <div class="{% ifequal yourgender '1' %}Chat_bubble_male_left {% else %} Chat_bubble_female_left {% endifequal %}"
+                             style="width:200px;white-space: pre-wrap;"> {{ msg.content }}</div>
+                    </div>
+                </div>
+            {% endifequal %}
+        {% endfor %}
+    </div>
+
+    <!— 底栏  -->
+    <div class="tabbar x flexwidth"
+         style="text-align: center;height: 50px;line-height: 50px;padding: 0 5px;background: white;">
+
+        <div class="flexwidth"
+             style="position: fixed;bottom: 45px;width: 100%;background: white;height: 50px;margin-left: -5px;">
+            <div class="x xcenter lr flexwidth"
+                 style="position: fixed;bottom: 45px;width: 100%;background: white;height: 50px; opacity: 0.5">
+                <a {% if msglist.has_previous %}href="?page={{ msglist.previous_page_number }}&myid={{ yourid }}" {% endif %}>
+                    <!-- 上一页按钮 -->
+                    <div style="margin-left: 20px">
+                        <img id="last" src='{% static '\icon\last.png' %}'
+                             style="cursor: pointer;width: 40px;height: 40px">
+                    </div>
+                </a>
+
+                <div>
+                    <button id="hi" style="background: #1497DB">打招呼</button>
+                </div>
+                <!-- 关闭按钮 -->
+                <div onclick="window.open('{{ backpath2 }}?myid={{ yourid }}&scrollTop={{ scrollTop }}&relation={{ relation }}&backpath={{ backpath }}','_self');">
+                    <img id="next" src='{% static 'love/images/icon/关机.png' %}'
+                         style="cursor: pointer;width: 30px;height: 30px">
+                </div>
+
+                <div>
+                    <button id="askpsd" style="background: #1497DB">要密码</button>
+                </div>
+
+                <a  {% if msglist.has_next %}
+                    href="?page={{ msglist.next_page_number }}&myid={{ yourid }}"  {% endif %}>
+                    <!-- 下一页按钮 -->
+                    <div style="margin-right: 20px">
+                        <img id="next" src='{% static '\icon\next.png' %}'
+                             style="cursor: pointer;width: 40px;height: 40px">
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <form action="{% url "chat" %}?myid={{ yourid }}" method="post" class="x sq" style="width: 100%">
+            {% csrf_token %}
+
+            <div style="width: 20%">
+                <button type="button" onclick="window.open('{% url 'chat' %}?myid={{ yourid }}','_self');">收信</button>
+            </div>
+
+            <div style="width: 60%">
+                <textarea required autofocus name="msg" id="msg" placeholder="想对她/他说点啥？ "
+                          style="width: 100%;height: 30px;margin: 10px auto" cols="10" rows="1"
+                ></textarea>
+            </div>
+
+            <div style="width: 20%">
+                <button type="submit">发送</button>
+            </div>
+
+        </form>
+    </div>
+{% endblock %}
+
+<!— 底部导航  -->
+{% block tabbar %}{% endblock %}
+
+<!— 本页脚本js  -->
+{% block myjs %}
+    <script type="text/javascript">
+        $(function () {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        $("#hi").on("click", function () {
+            $("#msg").html('你好，很高兴在知否遇到你！');
+        });
+        $("#askpsd").on("click", function () {
+            $("#msg").html('你好，想了解你更多哦，我的资料密码是{{ myinfopsd }}，方便告诉我你的资料密码吗？');
+        });
+    </script>
+
+
+
+{% endblock %}
+

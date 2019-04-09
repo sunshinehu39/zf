@@ -1,0 +1,511 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+{% block title %}提交资料 @ 单身俱乐部-知否{% endblock %}
+{% block mycss %}
+    <!— Weui-->
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.3/weui.min.css">
+    <script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
+    <style>
+        body {
+            background: pink;
+        }
+
+        .center {
+            display: table;
+            width: 60px;
+            padding: 0 10px;
+            vertical-align: middle;
+        }
+
+        .infoform {
+            width: 90%;
+            color: #FF63B1;
+            text-align: center;
+            margin: 5px auto;
+        }
+
+        .button {
+            margin: 10px;
+            min-width: 100px;
+            height: 40px;
+            border-radius: 20px;
+            background: #FE88BD;
+            color: white;
+        }
+
+        input {
+            margin: 5px;
+            text-align: center;
+            width: 40px;
+            vertical-align: middle;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            margin-top: -0.5px;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    <div id="infoform" class="infoform flexwidth">
+        <img src="{% static 'love/images/infotop.png' %}" style="margin: 10px 0px">
+
+
+                <fieldset>
+                <legend class="b"> >> 知否公告 << </legend>
+
+                 <div class="textJustify" style="white-space: pre-wrap">知否仅限学历大专以上，计划在成都定居的朋友加入！
+
+所有资料仅审核通过的知否会员可以查看，经济状况、情感经历和伴侣期望等重要信息还会自动加密，需征得您的同意获得密码后才能访问，密码在知否的个人中心里进行修改！
+
+真实姓名用于知否进行实名认证、仅自己可见，其他朋友只能看到你的昵称！
+
+最后，记得上传头像，需是能看清面部的本人照片哈！
+</div>
+                </fieldset>
+
+
+        <!-- 表单-上传裁剪头像 -->
+        <form id="clipform" enctype="multipart/form-data" method="post" action="{% url 'loveimg_post' %}?action={{ action }}">
+            {% csrf_token %}
+            <div hidden id="clipArea"></div>
+            <img id="photo" class="dosavatar" src="{{ MEDIA_URL }}{{ photopath }}" style="width: 50%">
+            <div style="margin: 5px auto;width: 100%;">
+                <button disabled style="background: #FF63B1;"><label id="upload" for="file">上传头像</label></button>
+                <input hidden type="file" id="file" name="photo">
+                <button hidden onlickc="return clipImg()" type="submit" id="clipBtn">保存头像</button>
+            </div>
+            <div hidden id="view"><textarea name="photo" rows="10" cols="100"></textarea></div>
+        </form>
+        <script>
+            $("#upload").on("click", function () {
+                $("#photo").hide();
+                $("#clipArea").slideDown();
+                $("#clipBtn").fadeIn();
+            });
+        </script>
+        <style>
+            #clipArea {
+                margin: auto;
+                height: 320px;
+                width: 320px;
+            }
+
+            #clipBtn {
+                margin: 20px;
+            }
+
+            #view {
+                margin: 0 auto;
+                width: 200px;
+                height: 200px;
+            }
+        </style>
+
+        <!-- 表单-提交个人资料 -->
+        <form action="{% url 'lovesaveinfo' %}" class="y" onsubmit="return verify()" style="margin-top: 20px"  enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <input name="truename" required autofocus type="text" placeholder="请输入您的真实姓名！" maxlength="16"
+                   style="width: 250px;margin: 5px auto" value="{{ truename }}">
+
+            <!-- 出生年份 -->
+            <div id="showDatePicker">
+                <input id="birthyear" name="birthyear" value="{{ birthyear }}" style="width: 70px;" type="number" readonly>年来到这个世界！
+            </div>
+            <!-- 昵称 -->
+            <div>江湖外号“ <input required name="nickname" type="text" value="{{ nickname }}" placeholder="请输入您的昵称！" maxlength="16" style="width: 150px;"> ”
+            </div>
+            <!-- 星座 -->
+            <div id="constellationPicker">
+                位列天宫“ <input id="constellation" name="constellation" type="text" readonly value="{{ constellation }}" style="width: 150px;"> ”
+            </div>
+            <!-- 学历 -->
+            <div class="x sq">
+                <div id="educationPicker">
+                    <input id="education" name="education" type="text" readonly style="width: 70px" value="{{ education }}">毕业
+                </div>
+                <!-- 家乡 -->
+                <div><input required name="hometown" type="text" style="width: 100px" value="{{ hometown }}" maxlength="16">人
+                </div>
+            </div>
+
+            <div class="x sq">
+                <div>身高<input required name="height" type="number" max="3" min="1" oninput="if(value.length>4)value=value.slice(0,4)" value="{{ height }}" step="0.01">m
+                </div>
+                <div>体重<input required name="weight"  oninput="if(value.length>3)value=value.slice(0,3)"  type="number" max="150" min="30" value="{{ weight }}">kg</div>
+            </div>
+            <!-- 职业 -->
+            <div>目前是一名<input required name="job" maxlength="30" type="text"  value="{{ job }}" style="width: 175px" placeholder="Web前端工程师">
+            </div>
+            <!-- 财务状况 -->
+            <div class="x lr" style="vertical-align: middle;line-height: 50px">
+                <div>年薪<input name="salary" required type="number" oninput="if(value.length>3)value=value.slice(0,3)"  min="0" max="300" value="{{ salary }}">万元</div>
+                <div><label><input type="checkbox"  {% ifequal house 1 %}  checked  {% endifequal %}   name="house" value="1">房</label></div>
+                <div><label><input type="checkbox"  {% ifequal car 1 %}  checked  {% endifequal %}   name="car" value="1">车</label></div>
+                <div><label><input type="checkbox"  {% ifequal smoke 1 %}  checked  {% endifequal %}  name="smoke" value="1">烟</label></div>
+                <div><label><input type="checkbox"  {% ifequal beer 1 %}  checked  {% endifequal %}  name="beer" value="1">酒</label></div>
+            </div>
+
+            <fieldset>
+                <legend class="b">兴趣爱好</legend>
+                <div class="x lr" style="margin-top: 10px">
+                    <div><label><input type="checkbox" {% ifequal h1 1 %}  checked  {% endifequal %}  name="hobbies" value="读书">读书</label></div>
+                    <div><label><input type="checkbox" {% ifequal h2 1 %}  checked  {% endifequal %}   name="hobbies" value="做饭">做饭</label></div>
+                    <div><label><input type="checkbox" {% ifequal h3 1 %}  checked  {% endifequal %}   name="hobbies" value="美食">美食</label></div>
+                    <div><label><input type="checkbox" {% ifequal h4 1 %}  checked  {% endifequal %}   name="hobbies" value="追剧">追剧</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h5 1 %}  checked  {% endifequal %}   name="hobbies" value="旅游">旅游</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h6 1 %}  checked  {% endifequal %}   name="hobbies" value="登山">登山</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h7 1 %}  checked  {% endifequal %}   name="hobbies" value="徒步">徒步</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h8 1 %}  checked  {% endifequal %}   name="hobbies" value="摄影">摄影</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h9 1 %}  checked  {% endifequal %}   name="hobbies" value="演讲">演讲</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h10 1 %}  checked  {% endifequal %}   name="hobbies" value="写作">写作</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h11 1 %}  checked  {% endifequal %}   name="hobbies" value="英语">英语</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h12 1 %}  checked  {% endifequal %}   name="hobbies" value="编程">编程</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h13 1 %}  checked  {% endifequal %}   name="hobbies" value="吉他">吉他</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h14 1 %}  checked  {% endifequal %}   name="hobbies" value="古琴">古琴</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h15 1 %}  checked  {% endifequal %}   name="hobbies" value="古筝">古筝</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h16 1 %}  checked  {% endifequal %}   name="hobbies" value="钢琴">钢琴</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h17 1 %}  checked  {% endifequal %}   name="hobbies" value="动漫">动漫</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h18 1 %}  checked  {% endifequal %}   name="hobbies" value="唱歌">唱歌</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h19 1 %}  checked  {% endifequal %}   name="hobbies" value="跳舞">跳舞</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h20 1 %}  checked  {% endifequal %}   name="hobbies" value="花艺">花艺</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h21 1 %}  checked  {% endifequal %}   name="hobbies" value="茶艺">茶艺</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h22 1 %}  checked  {% endifequal %}   name="hobbies" value="瑜伽">瑜伽</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h23 1 %}  checked  {% endifequal %}   name="hobbies" value="游泳">游泳</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h24 1 %}  checked  {% endifequal %}   name="hobbies" value="网球">网球</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h25 1 %}  checked  {% endifequal %}   name="hobbies" value="桌球">桌球</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h26 1 %}  checked  {% endifequal %}   name="hobbies" value="宠物">宠物</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h27 1 %}  checked  {% endifequal %}   name="hobbies" value="购物">购物</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h28 1 %}  checked  {% endifequal %}   name="hobbies" value="电竞">电竞</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h29 1 %}  checked  {% endifequal %}   name="hobbies" value="乒乓">乒乓</label></div>
+                    <div><label><input type="checkbox"  {% ifequal h30 1 %}  checked  {% endifequal %}   name="hobbies" value="羽毛球">羽球</label></div>
+                    <div class="grow"><input name="hobbiesother" maxlength="50" type="text" style="width: 100%" value="{{ hobbiesother }}" placeholder="更多兴趣爱好填这儿!"></div>
+                </div>
+            </fieldset>
+
+            <div style="margin-top: 15px">还有，还有：（个人情况、内心独白等）</div>
+            <textarea name="soliloquy" cols="3" rows="3" maxlength="1000">{{ soliloquy }}</textarea>
+            <div>迄今有<input name="lovenum" type="number" min="0" oninput="if(value.length>2)value=value.slice(0,2)"  max="20" style="width: 30px" value="{{ lovenum }}">段感情经历，我的感悟是：
+            </div>
+            <textarea name="thinklove" cols="3" rows="3" maxlength="1000">{{ thinklove }}</textarea>
+
+            <!-- 择偶标准 -->
+            <hr>
+            <div style="margin-top: 15px">
+                所以，最适合我的人生伴侣可能是这样的：
+                <!-- 对方的年龄范围 -->
+                <div class=" x lr">
+                    <div>
+                        <input name="agemin" type="number" min="19" max="60" oninput="if(value.length>2)value=value.slice(0,2)"  value="{{ agemin }}"> -
+                        <input name="agemax" type="number" min="24" max="70" oninput="if(value.length>2)value=value.slice(0,2)"  value="{{ agemax }}">岁
+                    </div>
+                    <!-- 情感经验 -->
+                    <div>
+                        <input name="lovenummin" type="number" min="0" max="5" oninput="if(value.length>1)value=value.slice(0,1)"  value="{{ lovenummin }}"> -
+                        <input name="lovenummax" type="number" min="3" max="20" oninput="if(value.length>2)value=value.slice(0,2)"  value="{{ lovenummax }}">恋爱
+                    </div>
+                </div>
+                <!-- 对方的身高体重 -->
+                <div class=" x lr">
+                    <div>
+                        <input name="heightmin" type="number" min="1.3" max="2" oninput="if(value.length>4)value=value.slice(0,4)"  value="{{ heightmin }}" step="0.01"> -
+                        <input name="heightmax" type="number" min="1.6" max="3" oninput="if(value.length>4)value=value.slice(0,4)"  value="{{ heightmax }}" step="0.01">米
+                    </div>
+
+                    <div id="yourstaturePicker">
+                        体型<input id="yourstature" name="yourstature"  type="text" readonly style="width: 70px"
+                               value="{{ yourstature }}">
+                    </div>
+
+                </div>
+                <!-- 对方的财务状况 -->
+                <div class="x lr" style="vertical-align: middle;line-height: 50px">
+                    <div>年薪><input name="salarymin"  type="number" min="0" max="300" oninput="if(value.length>3)value=value.slice(0,3)"  value="{{ salarymin }}" step="0.1">万元</div>
+                    <div><label><input type="checkbox"  {% ifequal ifhouse 1 %}  checked  {% endifequal %}  name="ifhouse" value="1">房</label></div>
+                    <div><label><input type="checkbox"  {% ifequal ifcar 1 %}  checked  {% endifequal %}  name="ifcar" value="1">车</label></div>
+                    <div><label><input type="checkbox"  {% ifequal ifsmoke 1 %}  checked  {% endifequal %}  name="ifsmoke" value="1">烟</label></div>
+                    <div><label><input type="checkbox"  {% ifequal ifbeer 1 %}  checked  {% endifequal %}  name="ifbeer" value="1">酒</label></div>
+                </div>
+                <!-- 对方的学历故乡 -->
+                <div class="x sq">
+                    <div id="youreducationPicker">
+                        <input id="youreducation" name="youreducation"  type="text" readonly style="width: 70px"
+                               value="{{ youreducation }}">毕业
+                    </div>
+                    <div><input type="text" name="yourhometown" maxlength="16"  value="{{ yourhometown }}" style="width: 100px" placeholder="四川成都">人
+                    </div>
+                </div>
+                <!-- 对方的兴趣爱好 -->
+                <fieldset>
+                    <legend class="b">兴趣爱好</legend>
+                    <div class="x lr" style="margin-top: 10px">
+                     <div><label><input type="checkbox" {% ifequal yh1 1 %}  checked  {% endifequal %}  name="yourhobbies" value="读书">读书</label></div>
+                    <div><label><input type="checkbox" {% ifequal yh2 1 %}  checked  {% endifequal %}   name="yourhobbies" value="做饭">做饭</label></div>
+                    <div><label><input type="checkbox" {% ifequal yh3 1 %}  checked  {% endifequal %}   name="yourhobbies" value="美食">美食</label></div>
+                    <div><label><input type="checkbox" {% ifequal yh4 1 %}  checked  {% endifequal %}   name="yourhobbies" value="追剧">追剧</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh5 1 %}  checked  {% endifequal %}   name="yourhobbies" value="旅游">旅游</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh6 1 %}  checked  {% endifequal %}   name="yourhobbies" value="登山">登山</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh7 1 %}  checked  {% endifequal %}   name="yourhobbies" value="徒步">徒步</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh8 1 %}  checked  {% endifequal %}   name="yourhobbies" value="摄影">摄影</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh9 1 %}  checked  {% endifequal %}   name="yourhobbies" value="演讲">演讲</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh10 1 %}  checked  {% endifequal %}   name="yourhobbies" value="写作">写作</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh11 1 %}  checked  {% endifequal %}   name="yourhobbies" value="英语">英语</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh12 1 %}  checked  {% endifequal %}   name="yourhobbies" value="编程">编程</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh13 1 %}  checked  {% endifequal %}   name="yourhobbies" value="吉他">吉他</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh14 1 %}  checked  {% endifequal %}   name="yourhobbies" value="古琴">古琴</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh15 1 %}  checked  {% endifequal %}   name="yourhobbies" value="古筝">古筝</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh16 1 %}  checked  {% endifequal %}   name="yourhobbies" value="钢琴">钢琴</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh17 1 %}  checked  {% endifequal %}   name="yourhobbies" value="动漫">动漫</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh18 1 %}  checked  {% endifequal %}   name="yourhobbies" value="唱歌">唱歌</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh19 1 %}  checked  {% endifequal %}   name="yourhobbies" value="跳舞">跳舞</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh20 1 %}  checked  {% endifequal %}   name="yourhobbies" value="花艺">花艺</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh21 1 %}  checked  {% endifequal %}   name="yourhobbies" value="茶艺">茶艺</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh22 1 %}  checked  {% endifequal %}   name="yourhobbies" value="瑜伽">瑜伽</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh23 1 %}  checked  {% endifequal %}   name="yourhobbies" value="游泳">游泳</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh24 1 %}  checked  {% endifequal %}   name="yourhobbies" value="网球">网球</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh25 1 %}  checked  {% endifequal %}   name="yourhobbies" value="桌球">桌球</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh26 1 %}  checked  {% endifequal %}   name="yourhobbies" value="宠物">宠物</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh27 1 %}  checked  {% endifequal %}   name="yourhobbies" value="购物">购物</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh28 1 %}  checked  {% endifequal %}   name="yourhobbies" value="电竞">电竞</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh29 1 %}  checked  {% endifequal %}   name="yourhobbies" value="乒乓">乒乓</label></div>
+                    <div><label><input type="checkbox"  {% ifequal yh30 1 %}  checked  {% endifequal %}   name="yourhobbies" value="羽毛球">羽球</label></div>
+                     <div class="grow"><input name="yourhobbiesother" maxlength="50" type="text" style="width: 100%" value="{{ yourhobbiesother }}" placeholder="更多兴趣爱好填这儿!"></div>
+                    </div>
+                </fieldset>
+                <div style="margin-top: 10px">如果还有以下特点就更好啦！</div>
+                <textarea name="more" cols="3" rows="3" maxlength="1000" style="width: 314px">{{ more }}</textarea>
+            </div>
+            <div>我的交友宣言是 ：<input name="loveslogan" type="text" maxlength="30" placeholder="爱你一万年！" value="{{ loveslogan }}" style="width: 180px">
+            </div>
+
+            {% ifequal gender '1' %}
+                <fieldset>
+                    <legend class="b">我的个性标签</legend>
+                    <div class="x lr" style="margin-top: 10px">
+                        <div><label><input type="checkbox" {% ifequal t1 1 %}  checked  {% endifequal %}   name="tags" value="聪明好学">聪明好学</label></div>
+                        <div><label><input type="checkbox"  {% ifequal t2 1 %}  checked  {% endifequal %}  name="tags" value="成熟稳重">成熟稳重</label></div>
+                        <div><label><input type="checkbox"  {% ifequal t3 1 %}  checked  {% endifequal %}  name="tags" value="风趣幽默">风趣幽默</label></div>
+                        <div><label><input type="checkbox"  {% ifequal t4 1 %}  checked  {% endifequal %}  name="tags" value="豪放不羁">豪放不羁</label></div>
+                        <div><label><input type="checkbox"  {% ifequal t5 1 %}  checked  {% endifequal %}  name="tags" value="淡泊名利">淡泊名利</label></div>
+                        <div><label><input type="checkbox"  {% ifequal t6 1 %}  checked  {% endifequal %}  name="tags" value="热心助人">热心助人</label></div>
+                        <div><label><input type="checkbox"  {% ifequal t7 1 %}  checked  {% endifequal %}  name="tags" value="责任感强">责任感强</label></div>
+                        <div><label><input type="checkbox"  {% ifequal t8 1 %}  checked  {% endifequal %}  name="tags" value="喜欢挑战">喜欢挑战</label></div>
+                        <div><label><input type="checkbox"  {% ifequal t9 1 %}  checked  {% endifequal %}  name="tags" value="不拘小节">不拘小节</label></div>
+                        <div class="grow"><input name="tagsother" value="{{ tagsother }}" maxlength="80" type="text" style="width: 100%"
+                                                 placeholder="更多个性标签填这儿!">
+                        </div>
+                    </div>
+                </fieldset>
+
+            {% else %}
+                <fieldset>
+                    <legend class="b">我的个性标签</legend>
+                    <div class="x lr" style="margin-top: 10px">
+                        <div><label><input type="checkbox" {% ifequal t10 1 %}  checked  {% endifequal %}  name="tags" value="温柔体贴">温柔体贴</label></div>
+                        <div><label><input type="checkbox" {% ifequal t11 1 %}  checked  {% endifequal %} name="tags" value="活泼可爱">活泼可爱</label></div>
+                        <div><label><input type="checkbox" {% ifequal t12 1 %}  checked  {% endifequal %} name="tags" value="聪明伶俐">聪明伶俐</label></div>
+                        <div><label><input type="checkbox" {% ifequal t13 1 %}  checked  {% endifequal %} name="tags" value="善解人意">善解人意</label></div>
+                        <div><label><input type="checkbox" {% ifequal t14 1 %}  checked  {% endifequal %} name="tags" value="心地善良">心地善良</label></div>
+                        <div><label><input type="checkbox" {% ifequal t15 1 %}  checked  {% endifequal %} name="tags" value="有同理心">有同理心</label></div>
+                        <div><label><input type="checkbox" {% ifequal t16 1 %}  checked  {% endifequal %} name="tags" value="自信优雅">自信优雅</label></div>
+                        <div><label><input type="checkbox" {% ifequal t17 1 %}  checked  {% endifequal %} name="tags" value="性感迷人">性感迷人</label></div>
+                        <div><label><input type="checkbox" {% ifequal t18 1 %}  checked  {% endifequal %} name="tags" value="内向文静">内向文静</label></div>
+                        <div class="grow"><input name="tagsother" type="text" maxlength="80" value="{{ tagsother }}" style="width: 100%"
+                                                 placeholder="更多个性标签填这儿!">
+                        </div>
+                    </div>
+                </fieldset>
+
+            {% endifequal %}
+            <div style="margin-top: 15px">希望<input name="marrymax" type="number" min="0" max="5" oninput="if(value.length>1)value=value.slice(0,1)"  value="{{ marrymax }}">年内可以结婚</div>
+
+            <!-- 联系方式 -->
+            <div style="margin-top: 15px">
+                我的手机号是：
+                <input id="phone" required name="phone" type="number" oninput="if(value.length>11)value=value.slice(0,11)"  value="{{ phone }}"
+      onblur="if(/0?(13|14|15|17|18|19)[0-9]{9}/gi.test(this.value)?true:false){$('#tips').html('');}else{ $('#tips').html('手机号格式不正确，请重新输入！'); }" style="width: 150px" >
+                        <p class="b" id="tips" style="color: red"></p>
+            </div>
+
+            <div>我的微信号是：<input required name="wechat" maxlength="20" value="{{ wechat }}" type="text" style="width: 150px" ></div>
+
+            <div style="margin: 20px 0px">
+                <input id="saveinfo" class="button" type="submit" style="width: 70%;border: none;" value="谢谢知否，我来啦！">
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block myjs %}
+    <script>
+        $('#showDatePicker').on('click', function () {
+            weui.datePicker({
+                start: 1960,
+                end: 2000,
+                onChange: function (result) {
+                    $('.weui-picker .weui-picker__bd .weui-picker__group').eq(1).hide();
+                    $('.weui-picker .weui-picker__bd .weui-picker__group').eq(2).hide();
+                },
+                onConfirm: function (result) {
+                    $('#birthyear').val(result[0]);
+                }
+            });
+        });
+        $('#constellationPicker').on('click', function () {
+            weui.picker([{
+                label: '白羊座（3.21～4.19）',
+                value: '白羊座',
+            }, {
+                label: '金牛座（4.20～5.20）',
+                value: '金牛座',
+            }, {
+                label: '双子座（5.21～6.21）',
+                value: '双子座',
+            }, {
+                label: '巨蟹座（6.22～7.22）',
+                value: '巨蟹座',
+            }, {
+                label: '狮子座（7.23～8.22）',
+                value: '狮子座',
+            }, {
+                label: '处女座（8.23～9.22）',
+                value: '处女座',
+            }, {
+                label: '天秤座（9.23～10.23）',
+                value: '天秤座',
+            }, {
+                label: '天蝎座（10.24～11.22）',
+                value: '天蝎座',
+            }, {
+                label: '射手座（11.23～12.21）',
+                value: '射手座',
+            }, {
+                label: '摩羯座（12.22～1.19）',
+                value: '摩羯座',
+            }, {
+                label: '水瓶座（1.20～2.18）',
+                value: '水瓶座',
+            }, {
+                label: '双鱼座（2.19～3.20）',
+                value: '双鱼座',
+            }], {
+                onChange: function (result) {
+                },
+                onConfirm: function (result) {
+                    $('#constellation').val(result);
+                }
+            });
+        });
+        $('#educationPicker').on('click', function () {
+            weui.picker([{
+                label: '专科',
+                value: '专科',
+            }, {
+                label: '本科',
+                value: '本科',
+            }, {
+                label: '硕士',
+                value: '硕士',
+            }, {
+                label: '博士',
+                value: '博士',
+            }, {
+                label: '其他',
+                value: '其他',
+            }], {
+                onChange: function (result) {
+                },
+                onConfirm: function (result) {
+                    $('#education').val(result);
+                }
+            });
+        });
+        $('#youreducationPicker').on('click', function () {
+            weui.picker([{
+                label: '不限',
+                value: '不限',
+            }, {
+                label: '专科',
+                value: '专科',
+            }, {
+                label: '本科',
+                value: '本科',
+            }, {
+                label: '硕士',
+                value: '硕士',
+            }, {
+                label: '博士',
+                value: '博士',
+            }], {
+                onChange: function (result) {
+                },
+                onConfirm: function (result) {
+                    $('#youreducation').val(result);
+                }
+            });
+        });
+        $('#yourstaturePicker').on('click', function () {
+            weui.picker([{
+                label: '骨感',
+                value: '骨感',
+            }, {
+                label: '苗条',
+                value: '苗条',
+            }, {
+                label: '标准',
+                value: '标准',
+            }, {
+                label: '微胖',
+                value: '微胖',
+            }, {
+                label: '丰满',
+                value: '丰满',
+            }], {
+                onChange: function (result) {
+                },
+                onConfirm: function (result) {
+                    $('#yourstature').val(result);
+                }
+            });
+        });
+    </script>
+
+        <script>
+        function verify() {
+            if ( $('#tips').html()!=''){
+                alert('手机号格式不正确，请重新输入！');
+                $('#phone').focus();
+                return false;
+            }
+        }
+    </script>
+
+    <script src="{% static 'js/img_js/iscroll-zoom.js' %}"></script> <!--实现图片的移动-->
+    <script src="{% static 'js/img_js/hammer.js' %}"></script>
+    <script src="{% static 'js/img_js/lrz.all.bundle.js' %}"></script>
+    <script src="{% static 'js/img_js/jquery.photoClip.js' %}"></script> <!--实现图片的剪裁-->
+    <script>
+        var clipArea = new bjj.PhotoClip("#clipArea", {
+            size: [260, 260],
+            outputSize: [640, 640],
+            file: "#file",
+            view: "#view",
+            ok: "#clipBtn",
+            loadStart: function () {
+                {#console.log("照片读取中");#}
+            },
+            loadComplete: function () {
+                {#console.log("照片读取完成");#}
+            },
+            clipFinish: function (dataURL) {
+                {#console.log(dataURL);#}
+            }
+        });
+    </script>
+{% endblock %}

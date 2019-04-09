@@ -1,0 +1,189 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+{% block title %}登录 @ 知否-单身俱乐部{% endblock %}
+{% block mycss %}
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet">
+
+    <style>
+
+        .center {
+            display: table;
+            width: 60px;
+            padding: 0 10px;
+            vertical-align: middle;
+        }
+
+        .loginform {
+            position: fixed;
+            bottom: 10%;
+            width: 100%;
+            text-align: center;
+        }
+
+        .registerform {
+            padding-top: 100px;
+            text-align: center;
+        }
+
+        input {
+            margin: 10px;
+            width: 280px;
+            height: 40px;
+            border: none;
+        }
+
+        .button {
+            margin: 10px;
+            height: 40px;
+            width: auto;
+            min-width: 80px;
+            border-radius: 20px;
+            background: #FE88BD;
+            color: white;
+        }
+
+        input[type="radio"] + label::before {
+            content: "\a0"; /*不换行空格*/
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 18px;
+            width: 1em;
+            height: 1em;
+            margin-right: .4em;
+            border-radius: 50%;
+            border: 1px solid #FE88BD;
+            text-indent: .15em;
+            line-height: 1;
+        }
+
+        div.male > input[type="radio"] + label::before {
+            border: 1px solid #00a0e9;
+        }
+
+        div.female > input[type="radio"]:checked + label::before {
+            background-color: #FE88BD;
+            background-clip: content-box;
+            padding: .2em;
+        }
+
+        div.male > input[type="radio"]:checked + label::before {
+            background-color: #00a0e9;
+            background-clip: content-box;
+            padding: .2em;
+        }
+
+        input[type="radio"] {
+            position: absolute;
+            clip: rect(0, 0, 0, 0);
+        }
+
+
+    </style>
+{% endblock %}
+{% block content %}
+    <img id="bg" src="{% static "love/images/index.png" %}"  style="position: absolute;z-index: -1">
+    <!-- 首页 -->
+    <div>
+        <!-- 注册 -->
+        <div id="registerform" hidden class="registerform ">
+            <form action="{% url 'loveregister' %}" method="post" onsubmit="return verify()" class="y">
+                {% csrf_token %}
+
+                <div id="choosesex" class="x xcenter">
+                    <div class="male" style="margin: 10px 20px">
+                        <input required type="radio" id="male" name="sex" value="1"/>
+                        <label for="male" style="color: #00a0e9"><img class="m5 b"
+                                                                      src="{% static 'love/images/icon/男士.png' %}"
+                                                                      height="30px">我是帅哥</label>
+                    </div>
+                    <div class="female" style="margin: 10px 20px">
+                        <input required type="radio" id="female"  name="sex" value="2"/>
+                        <label for="female" style="color: #ff379d"><img class="m5 b"
+                                                                        src="{% static 'love/images/icon/女士.png' %}"
+                                                                        height="30px">我是美女</label>
+                    </div>
+                </div>
+
+                <div>
+                    <input required autofocus name="registeraccounts" type="text" placeholder="{{ registermsg }}">
+                </div>
+                <div>
+                    <input id="password" required name="registerpassword" type="password" placeholder="请输入您的密码！">
+                </div>
+                <div><input id="passwordconfirm" required type="password" placeholder="请再次输入您的密码！"></div>
+                <div><input name="referrer" type="number" placeholder="请输入邀请码，没有请忽略！"></div>
+
+                <div class="x xcenter">
+                    <input id="showloginform" class="button" type="button" value="登录">
+                    <input class="button" type="submit" value="注册">
+                </div>
+            </form>
+        </div>
+
+        <!-- 登录 -->
+        <div id="loginform" class="loginform flexwidth">
+            <form action="{% url 'lovelogin' %}" method="post" class="y center " style="width: 100%">
+                {% csrf_token %}
+                <div><input {% if not passwordfocus %} autofocus {% endif %}
+                                                       required name="accounts" type="text" placeholder="请输入您的帐号！"
+                                                       value="{{ accounts }}"></div>
+                <div><input autofocus required name="password" type="password" placeholder="{{ passwordmsg }}">
+                </div>
+
+                <div class="x grow sq">
+                    <div><input class="button" type="button" value="瞅瞅"
+                                onclick="window.open('{% url 'activity' %}','_self');"></div>
+                    <div><input id="registerbnt" class="button" type="button" value="注册">
+                    </div>
+                    <div><input class="button" type="submit" value="登录"></div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block myjs %}
+
+    <script>
+        function verify() {
+            if (($('#passwordconfirm').val().trim()) != ($('#password').val().trim())) {
+                alert('两次密码填写不一致！')
+                $('#passwordconfirm').focus();
+                return false;
+            }
+        }
+    </script>
+
+    <script>
+
+
+        /* 注册按钮 */
+        $("#registerbnt").on("click", function () {
+            $("#bg").addClass('blur');
+            $("#loginform").fadeOut();
+            $("#registerform").fadeIn();
+            $("#registerform").addClass("animated");
+            $("#registerform").addClass("rubberBand");
+            $("#registeraccounts").focus();
+
+        });
+
+        $("#showloginform").on("click", function () {
+            $("#registerform").fadeOut();
+            $("#bg").removeClass('blur');
+
+            setTimeout(function () {
+                $("#loginform").fadeIn();
+                $("#loginform").addClass("animated");
+                $("#loginform").addClass("fadeInDown");
+                $("#accounts").focus();
+            }, 300);
+        });
+
+
+    </script>
+
+{% endblock %}

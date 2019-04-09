@@ -1,0 +1,70 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+{% block title %}修改密码 @ 知否-单身俱乐部{% endblock %}
+{% block mycss %}
+
+    <style>
+
+        .center {
+            display: table;
+            width: 60px;
+            padding: 0 10px;
+            vertical-align: middle;
+        }
+
+        .loginform {
+            position: fixed;
+            bottom: 10%;
+            width: 100%;
+            text-align: center;
+        }
+
+        .registerform {
+            padding-top: 100px;
+            text-align: center;
+        }
+
+        input {
+            margin: 10px;
+            width: 280px;
+            height: 40px;
+            border: none;
+        }
+
+        .button {
+            margin: 10px;
+            height: 40px;
+            width: auto;
+            min-width: 80px;
+            border-radius: 20px;
+            background: #FE88BD;
+            color: white;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <img src="{% static "love/images/index.png" %}"  style="position: absolute;z-index: -1">
+    <!-- 首页 -->
+    <div style="text-align: center">
+
+
+        <!-- 登录 -->
+        <div id="loginform" class="loginform flexwidth">
+            <h1 style="color: white;margin: 20px" >{{ msg }}</h1>
+            <form action="{% url 'changepsd' %}" method="post" class="y center " style="width: 100%">
+                {% csrf_token %}
+                <div><input autofocus required name="accounts" type="text" placeholder="输入要修改的帐号！"></div>
+                <div><input required name="newpassword" type="password" placeholder="请输入新密码">
+                </div>
+
+                <div class="x grow sq">
+                    <div><input class="button" type="submit" value="修改密码"></div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+{% endblock %}

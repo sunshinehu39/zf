@@ -1,0 +1,363 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+{% load lovefilter %}
+
+{% block title %}寻觅良缘 @ 单身俱乐部 - 知否{% endblock %}
+
+{% block mycss %}
+    <style>
+        input {
+            text-align: center;
+        }
+
+        .Chat_bubble_female:after {
+            top: 7px;
+            right: 97.9%;
+        }
+
+        .Chat_bubble_male:after {
+            top: 7px;
+            right: 97.9%;
+        }
+
+        .maininfo {
+            font-size: 13px;
+            margin: 5px;
+            line-height: 20px;
+        }
+
+        .choose {
+            background: #f781b6;
+            color: white;
+            font-size: 12px;
+            font-weight: lighter;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0px;
+            width: 100%;
+            height: 40px;
+            z-index: 1000;
+            background: #f781b6;
+            border: none;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% if  is_login %}
+        <div id="showmatchform" class="nav choose  sq flexwidth">
+            <span class="choose">{{ agemin }}-{{ agemax }}岁</span>
+            <span class="choose">{{ heightmin }}-{{ heightmax }}m</span>
+            <span class="choose">体型{{ yourstature }}</span>
+            <span class="choose">学历{{ youreducationstr }}</span>
+            <span class="choose">{{ yourproperty }}</span>
+            <span class="choose">{{ yourhabit }}</span>
+        </div>
+
+        <div style="margin-bottom: 60px;margin-top: 45px">
+
+            <!-- 表单-匹配条件-->
+            <form hidden id="matchform" action="{% url 'matchlove' %}" method="post" class="flexwidth"
+                  style="
+                  position: fixed;top: 40px;background: white;z-index: 1000;
+                  padding:5px 0px 10px 15px ; box-shadow:0 1px 1px rgba(0,0,0,0.1),0 6px 6px rgba(0,0,0,0.1);width: 100%;">
+                {% csrf_token %}
+
+                <div class="x lr">
+                    <div>
+                        <input required name="agemin" type="number" min="19" max="35" value="{{ agemin }}"> -
+                        <input required name="agemax" type="number" min="24" max="50" value="{{ agemax }}"> 岁
+                    </div>
+                    <div>
+                        <input required name="heightmin" type="number" min="1.3" max="2" value="{{ heightmin }}"
+                               step="0.01"> -
+                        <input required name="heightmax" type="number" min="1.6" max="3" value="{{ heightmax }}"
+                               step="0.01"> m
+                    </div>
+
+                    <div id="yourstaturePicker" style="width: 100px">
+                        体型 <input id="yourstature" name="yourstature" type="text" readonly style="width: 50px"
+                                  value="{{ yourstature }}">
+                    </div>
+                </div>
+                <div class="x lr">
+                    <!-- 对方的财务状况 -->
+                    <div class="x lr grow" style="vertical-align: middle;line-height: 50px;margin-right: 20px">
+                        <div><label><input type="checkbox"  {% ifequal ifhouse 1 %}  checked  {% endifequal %}
+                                           name="ifhouse"
+                                           value="1"> 房</label></div>
+                        <div><label><input type="checkbox"  {% ifequal ifcar 1 %}  checked  {% endifequal %}
+                                           name="ifcar"
+                                           value="1"> 车</label></div>
+                        <div><label><input type="checkbox"  {% ifequal ifsmoke 1 %}  checked  {% endifequal %}
+                                           name="ifsmoke"
+                                           value="1"> 烟</label></div>
+                        <div><label><input type="checkbox"  {% ifequal ifbeer 1 %}  checked  {% endifequal %}
+                                           name="ifbeer"
+                                           value="1"> 酒</label></div>
+                    </div>
+                    <div id="youreducationPicker" style="width: 100px;vertical-align: middle;line-height: 50px;">
+                        学历 <input id="youreducation" name="youreducation" type="text" readonly style="width: 50px"
+                                  value="{{ youreducationstr }}">
+                    </div>
+                </div>
+
+                <div class="x xcenter" style="margin-left: -15px">
+                    <button type="submit" style="background: #f772a8;width: 90%">开始匹配</button>
+                </div>
+
+            </form>
+
+            {% if list %}
+                {% ifequal yourgender '2' %}
+                    {% for girl in list %}
+                        <div class="x"
+                             style="box-shadow:0 1px 1px rgba(0,0,0,0.1),0 6px 6px rgba(0,0,0,0.1);margin-top: 3px"
+                             onclick="var scrollTop = window.pageYOffset ||document.documentElement.scrollTop || document.body.scrollTop || 0;window.open('{% url "showWoman" %}?myid={{ girl.U_id_id }}&backpath={% url "matchlove" %}&scrollTop='+scrollTop,'_self');">
+                            <div class="y">
+                                <div><img class="dosavatar" src="{{ MEDIA_URL }}{{ girl.U_id.avatar }}"></div>
+                                <div style="text-align: center;font-size: 12px;margin-top: -6px">{{ girl.nickname }}</div>
+                            </div>
+
+                            <div class="x" style="margin-top: 20px;flex-grow: 1;justify-content:space-around;">
+                                <div style="flex-grow: 1">
+                                    <div class="maininfo textoverflow" style="width: 95%">{{ girl.birthyear|age }}岁
+                                        &emsp;{{ girl.height }}m&emsp;{{ girl.job }}</div>
+                                </div>
+                            </div>
+
+                            <div class="Chat_bubble_female textJustify" style="margin:-30px 10px 18px 80px">
+                                {{ girl.loveslogan |default:"真爱离我有多远 ？" }} <br>
+                                {{ girl.soliloquy |default:"希望能在知否遇到你 ！" }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {% for boy in list %}
+                        <div class="x"
+                             style="box-shadow:0 1px 1px rgba(0,0,0,0.1),0 6px 6px rgba(0,0,0,0.1);margin-top: 3px"
+                             onclick="var scrollTop = window.pageYOffset ||document.documentElement.scrollTop || document.body.scrollTop || 0;window.open('{% url "showMan" %}?myid={{ boy.U_id_id }}&backpath={% url "matchlove" %}&scrollTop='+scrollTop,'_self');">
+                            <div class="y">
+                                <div><img class="dosavatar" src="{{ MEDIA_URL }}{{ boy.U_id.avatar }}"></div>
+                                <div style="text-align: center;font-size: 12px;margin-top: -6px"> {{ boy.nickname }}</div>
+                            </div>
+
+                            <div class="x" style="margin-top: 20px;flex-grow: 1;justify-content:space-around;">
+                                <div style="flex-grow: 1">
+                                    <div class="maininfo textoverflow" style="width: 95%">{{ boy.birthyear|age }}岁
+                                        &emsp;{{ boy.height }}m&emsp;{{ boy.job }}</div>
+                                </div>
+                            </div>
+
+                            <div class="Chat_bubble_male textJustify" style="margin:-30px 10px 18px 80px">
+                                {{ boy.loveslogan |default:"真爱离我有多远 ？" }} <br>
+                                {{ boy.soliloquy |default:"希望在知否遇到你 ！" }}
+                            </div>
+                        </div>
+
+                    {% endfor %}
+                {% endifequal %}
+            {% else %}
+                <img src="{% static 'love\images\hi.jpg' %}" width="100%" style="margin-top: -5px">
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        <div id="showmatchform" class="nav choose  sq flexwidth">
+            <span class="choose">24 -28 岁</span>
+            <span class="choose">1.6-1.75m</span>
+            <span class="choose">体型标准</span>
+            <span class="choose">学历本科</span>
+            <span class="choose">无车无房</span>
+            <span class="choose">无烟无酒</span>
+        </div>
+        <div style="margin-bottom: 60px;margin-top: 45px">
+            <div onclick="window.open('{% url 'lovelogin' %}','_self');">
+                <div class="x" style="box-shadow:0 1px 1px rgba(0,0,0,0.1),0 6px 6px rgba(0,0,0,0.1);margin-top: 3px">
+                    <div class="y">
+                        <div><img class="dosavatar" src="{% static 'love\images\女4.jpg' %}"></div>
+                        <div style="text-align: center;font-size: 12px;margin-top: -6px">谭敏</div>
+                    </div>
+
+                    <div class="x" style="margin-top: 20px;flex-grow: 1;justify-content:space-around">
+                        <div style="flex-grow: 1">
+                            <button class="tag">温柔贤惠</button>
+                        </div>
+                        <div style="flex-grow: 1">
+                            <button class="tag">知书达理</button>
+                        </div>
+                        <div style="flex-grow: 1">
+                            <button class="tag">活泼可爱</button>
+                        </div>
+                    </div>
+
+                    <div class="Chat_bubble_female textJustify" style="margin:-20px 10px 18px 80px">
+                        咱们成为小贝壳吧，可以一起在大海里泡个澡。在浪花里嬉戏，在沙滩上晒心情，一起看日落。感受乘风破浪的惊险，相互拥有的幸福！简简单单才是真！
+                    </div>
+                </div>
+                <div class="x" style="box-shadow:0 1px 1px rgba(0,0,0,0.1),0 6px 6px rgba(0,0,0,0.1);margin-top: 3px">
+                    <div class="y">
+                        <div><img class="dosavatar" src="{% static 'love\images\女2.jpg' %}"></div>
+                        <div style="text-align: center;font-size: 12px;margin-top: -6px">林静</div>
+                    </div>
+
+                    <div class="x" style="margin-top: 20px;flex-grow: 1;justify-content:space-around">
+                        <div style="flex-grow: 1">
+                            <button class="tag">健身达人</button>
+                        </div>
+                        <div style="flex-grow: 1">
+                            <button class="tag">动若脱兔</button>
+                        </div>
+                        <div style="flex-grow: 1">
+                            <button class="tag">幽默风趣</button>
+                        </div>
+                    </div>
+
+                    <div class="Chat_bubble_female textJustify" style="margin:-20px 10px 18px 80px">
+                        没有你的日子，生活是一种摆设，是街心没有生命的雕塑，是案头没有香味的花朵，是天空却没有小鸟！
+                    </div>
+                </div>
+                <div class="x" style="box-shadow:0 1px 1px rgba(0,0,0,0.1),0 6px 6px rgba(0,0,0,0.1);margin-top: 3px">
+                    <div class="y">
+                        <div><img class="dosavatar" src="{% static 'love\images\女3.jpg' %}"></div>
+                        <div style="text-align: center;font-size: 12px;margin-top: -6px">杨星</div>
+                    </div>
+
+                    <div class="x" style="margin-top: 20px;flex-grow: 1;justify-content:space-around">
+                        <div style="flex-grow: 1">
+                            <button class="tag">积极乐观</button>
+                        </div>
+                        <div style="flex-grow: 1">
+                            <button class="tag">勤俭持家</button>
+                        </div>
+                        <div style="flex-grow: 1">
+                            <button class="tag">饱读诗书</button>
+                        </div>
+                    </div>
+
+                    <div class="Chat_bubble_female textJustify" style="margin:-20px 10px 18px 80px">
+                        其实，我很累了，我习惯假装坚强，习惯了一个人面对所有，我不知道自己到底想怎么样。有时候我可以很开心的和每个人说话，可以很放肆的，可是却没有人知道，那不过是伪装，很刻意的伪装；我可以让自己很快乐很快乐，可是却找不到快乐的源头，只是傻笑。
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- 底栏 -->
+    <div class="tabbar x sq flexwidth">
+
+        <div class="tabbaritem ">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/指示牌.png' %}"
+                      style="margin-left: 8px"></div>
+            <div class="bartext">寻觅</div>
+        </div>
+
+        <div class="tabbaritem notactive"
+             onclick="window.open('{% url 'activity' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/干杯.png' %}"
+                      style="margin-left: 2px"></div>
+            <div class="bartext">活动</div>
+        </div>
+
+        <div class="tabbaritem notactive"
+             onclick="window.open('{% url 'encounter' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/照片库.png' %}"
+                      style="margin-left: 5px"></div>
+            <div class="bartext">邂逅</div>
+        </div>
+
+
+        <div class="tabbaritem notactive"
+                {% if  is_login %}
+             onclick="window.open('{% url 'me' %}','_self');"
+                {% else %}
+             onclick="window.open('/love','_self');"
+                {% endif %}
+        >
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/知否.png' %}"></div>
+            <div class="bartext">知否</div>
+        </div>
+
+        {% ifequal vip 6 %}
+            <div class="tabbaritem notactive" onclick="window.open('{% url 'log' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/动态.png' %}"
+                          style="margin-left: 2px"></div>
+                <div class="bartext">动态</div>
+            </div>
+        {% endifequal %}
+
+    </div>
+
+
+{% endblock %}
+
+{% block myjs %}
+    <!— Weui-->
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.3/weui.min.css">
+    <script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
+    <script>
+
+        $('#youreducationPicker').on('click', function () {
+            weui.picker([{
+                label: '大专',
+                value: '大专',
+            }, {
+                label: '本科',
+                value: '本科',
+            }, {
+                label: '硕士',
+                value: '硕士',
+            }, {
+                label: '博士',
+                value: '博士',
+            }, {
+                label: '不限',
+                value: '不限',
+            }], {
+                onChange: function (result) {
+                },
+                onConfirm: function (result) {
+                    $('#youreducation').val(result);
+                }
+            });
+        });
+
+        $('#yourstaturePicker').on('click', function () {
+            weui.picker([{
+                label: '骨感',
+                value: '骨感',
+            }, {
+                label: '苗条',
+                value: '苗条',
+            }, {
+                label: '标准',
+                value: '标准',
+            }, {
+                label: '微胖',
+                value: '微胖',
+            }, {
+                label: '丰满',
+                value: '丰满',
+            }], {
+                onChange: function (result) {
+                },
+                onConfirm: function (result) {
+                    $('#yourstature').val(result);
+                }
+            });
+        });
+        $('#showmatchform').on('click', function () {
+            $('#matchform').fadeToggle();
+        });
+
+        $(function () {
+            window.scrollTo(0, {{ scrollTop |default:0}});
+        });
+    </script>
+
+{% endblock %}

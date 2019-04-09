@@ -1,0 +1,100 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+<!— 网页标题  -->
+{% block title %}{{ keyword }}我的 - 我{{ keyword }}的 @ 知否 {% endblock %}
+
+<!— 本页样式css  -->
+{% block mycss %}{% endblock %}
+
+<!— 顶部导航  -->
+{% block topnav %}{% endblock %}
+
+<!— 主体内容  -->
+{% block content %}
+
+    <div style="margin-bottom: 80px">
+
+        <div>
+            <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+            <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                相互{{ keyword }}
+            </div>
+        </div>
+
+        <div class="x sq">
+            {% for i in fallinlovelist %}
+
+                <div class="y"
+                        {% ifequal i.gender '1' %}
+                     onclick="window.open('{% url "showMan" %}?myid={{ i.id }}&backpath={% url "relation" %}&relation={{ relation }}','_self');"
+                        {% else %}
+                     onclick="window.open('{% url "showWoman" %}?myid={{ i.id }}&backpath={% url "relation" %}&relation={{ relation }}','_self');"
+                        {% endifequal %}
+                >
+                    <div><img class="dosavatar" src="{{ MEDIA_URL }}{{ i.avatar }}"></div>
+                    <div style="text-align: center;font-size: 12px;margin-top: -6px"> {{ i.nickname }}</div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div style="margin-top: 20px">
+            <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+            <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                我{{ keyword }}的
+            </div>
+        </div>
+
+        <div class="x sq">
+            {% for i in mylovelist %}
+                <div class="y"
+                        {% ifequal i.gender '1' %}
+                     onclick="window.open('{% url "showMan" %}?myid={{ i.id }}&backpath={% url "relation" %}&relation={{ relation }}','_self');"
+                        {% else %}
+                     onclick="window.open('{% url "showWoman" %}?myid={{ i.id }}&backpath={% url "relation" %}&relation={{ relation }}','_self');"
+                        {% endifequal %}
+
+                >
+                    <div><img class="dosavatar" src="{{ MEDIA_URL }}{{ i.avatar }}"></div>
+                    <div style="text-align: center;font-size: 12px;margin-top: -6px"> {{ i.nickname }}</div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div style="margin-top: 20px">
+            <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+            <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                {{ keyword }}我的
+            </div>
+        </div>
+
+        <div class="x sq">
+            {% for i in mylovedlist %}
+                <div class="y"
+                        {% ifequal i.gender '1' %}
+                     onclick="window.open('{% url "showMan" %}?myid={{ i.id }}&backpath={% url "relation" %}&relation={{ relation }}','_self');"
+                        {% else %}
+                     onclick="window.open('{% url "showWoman" %}?myid={{ i.id }}&backpath={% url "relation" %}&relation={{ relation }}','_self');"
+                        {% endifequal %}
+                >
+                    <div><img class="dosavatar" src="{{ MEDIA_URL }}{{ i.avatar }}"></div>
+                    <div style="text-align: center;font-size: 12px;margin-top: -6px"> {{ i.nickname }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <!-- 底栏 -->
+    <div class="tabbar x flexwidth xcenter" style="background: dimgrey">
+        <div class="tabbaritem " onclick="window.open('/love/me','_self');">
+            <img class="baricon" src="{% static 'love/images/icon/关闭.png' %}">
+        </div>
+    </div>
+{% endblock %}
+
+<!— 底部导航  -->
+{% block tabbar %}{% endblock %}
+
+<!— 本页脚本js  -->
+{% block myjs %}{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+<!— 网页标题  -->
+{% block title %}资料审核中…… @ 知否 - 单身俱乐部  {% endblock %}
+
+<!— 本页样式css  -->
+{% block mycss %}
+    <style>
+            .button {
+            margin: 10px;
+            height: 40px;
+            width: auto;
+            min-width: 80px;
+            border-radius: 20px;
+            background: #FE88BD;
+            color: white;
+        }
+</style>
+{% endblock %}
+
+<!— 顶部导航  -->
+{% block topnav %}{% endblock %}
+
+<!— 主体内容  -->
+{% block content %}
+    <style>
+    body{
+        {#background: url('{% static "love/images/chat.jpg" %}');#}
+        background-size: cover;
+        {#background: black;#}
+        background-repeat: no-repeat;
+    }
+    </style>
+<div style="overflow: hidden; height: 180px;background: black ;text-align: center">
+    <img  height="200px"  src="{% static 'love/images/焰火.gif' %}" >
+</div>
+    <div style="text-align: center;margin-top: 30px">
+     <div class="b" style="color: green"><img class="m5" src="{% static 'love/images/icon/打钩-绿.png' %}" height="30px"> 恭喜您，资料提交成功！</div>
+
+    <div style="text-align: center;white-space: pre-wrap">
+请耐心等待审核结果
+
+现在您可以返回
+</div>
+
+<input class="button" type="button" value="修改资料"
+                                    onclick="window.open('{% url 'getinfo' %}?action=update','_self');">
+
+    或者
+                        <input class="button" type="button" value="先去瞅瞅"
+                                    onclick="window.open('{% url 'activity' %}','_self');">
+</div>
+
+            <a href="tel:18140074192" style="text-decoration: none;color: #ff5087; ">
+            <div class="myitem" style="text-align: center;margin-top: 10px">
+                <img src="{% static 'love/images/icon/红娘.png' %}" class="myicon">知否红娘 — 微信 18140074192
+            </div>
+            </a>
+
+        <div class="tabbar x sq flexwidth">
+
+            <div class="tabbaritem "
+                 onclick="window.open('{% url 'matchlove' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/指示牌.png' %}"
+                          style="margin-left: 8px"></div>
+                <div class="bartext">寻觅</div>
+            </div>
+
+            <div class="tabbaritem " onclick="window.open('{% url 'activity' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/干杯.png' %}"
+                          style="margin-left: 2px"></div>
+                <div class="bartext">活动</div>
+            </div>
+
+            <div class="tabbaritem " onclick="window.open('{% url 'encounter' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/照片库.png' %}"
+                          style="margin-left: 5px"></div>
+                <div class="bartext">邂逅</div>
+            </div>
+
+
+            <div class="tabbaritem " onclick="window.open('{% url 'me' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/知否.png' %}"></div>
+                <div class="bartext">知否</div>
+            </div>
+
+        </div>
+
+{% endblock %}
+
+<!— 底部导航  -->
+{% block tabbar %}{% endblock %}
+
+<!— 本页脚本js  -->
+{% block myjs %}{% endblock %}

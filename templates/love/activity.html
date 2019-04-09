@@ -1,0 +1,275 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+{% block title %}同城活动 @ 单身俱乐部 - 知否{% endblock %}
+
+ {% block content %}
+
+        <!-- 标题 -->
+        <div>
+            <img src="{% static 'love/images/talk.jpg' %}" alt="" width="100%">
+            <p style="color: white;margin-top: -38px;text-align: center">谈情说爱 - 第1期</p>
+
+            <h4 class="b"
+                style="color: #EA1752; text-align: center;border-bottom: 1px solid rgba(27,46,48,0.34);line-height: 50px;margin-top: 15px">
+                有 种 恋 爱 叫 知 否 </h4>
+        </div>
+
+        <div style="margin: 10px">
+
+            <div>
+
+                <!-- 基本信息 -->
+                <div style="line-height: 50px;vertical-align: middle;">
+
+                    <!-- 时间 -->
+                    <div><img class="m5" src="{% static 'love/images/icon/时间.png' %}" alt="" height="30px"
+                              style="margin-top: 1px;">
+                        3月31日
+                        <button style="background: #1497DB">周天</button>
+                        下午14:30 - 17:00
+                    </div>
+
+                    <!-- 地点 -->
+
+                    <div><img class="m5" style="margin-left: 10px" src="{% static 'love/images/icon/地点.png' %}"
+                              height="30px" width="23px"> 市中心（ 详细地址报名成功后通知 ）
+                    </div>
+
+
+                    {#                    <a href="https://www.amap.com/search?query=天荒地老咖啡厅">#}
+                    {#                        <div><img class="m5" style="margin-left: 9px" src="{% static 'love/images/icon/地点.png' %}"#}
+                    {#                                  height="30px" width="23px">活动地点在市中心、详情报名成功后通知#}
+                    {##}
+                    {#                            <img class="m5" src="{% static 'love/images/icon/右.png' %}"#}
+                    {#                                                                          alt="" height="15px"></div>#}
+                    {#                    </a>#}
+
+                    <!-- 人数 -->
+                    {#                    <div>#}
+                    {#                        <img style="margin-left: 11px" class="m5" src="{% static 'love/images/icon/帅哥.png' %}"#}
+                    {#                             height="20px"> 10#}
+                    {#                        <img class="m5" src="{% static 'love/images/icon/美女.png' %}" alt="" height="25px"> 10#}
+                    {#                    </div>#}
+
+                </div>
+
+
+                <!-- 引言 -->
+                <div style="text-align: center;color: #da196e;margin-top: 10px">春暖花开，心潮澎湃，遇见你，遇见爱！</div>
+                <div style="text-align: center;color: grey;margin-bottom: 10px">
+                    <p>受够了尴尬无趣的相亲？</p>
+                    <p>找不到怦然心动的感觉？</p>
+                    <p>期待着轻松愉快的邂逅？</p>
+                    <p>我想，这次活动适合你！</p>
+                </div>
+
+                <!-- 官宣 -->
+                <div>
+                    <div style="margin-top: 20px">
+                        <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+                        <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                            不匹配？——不聚！
+                        </div>
+                    </div>
+
+                    <div style="margin-left: 40px">
+                        <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">严审个人资料，多重实名认证
+                        </div>
+                        <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">海选优质男女，精准互选匹配
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="margin-top: 20px">
+                        <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+                        <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                            不走心？——不约！
+                        </div>
+                    </div>
+                    <div style="margin-left: 40px">
+                        <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">聚焦情感话题，引导深度沟通
+                        </div>
+                        <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">畅想美好未来，激发灵魂共鸣
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="margin-top: 20px">
+                        <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+                        <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                            不好耍？——不来！
+                        </div>
+                    </div>
+                    <div style="margin-left: 40px">
+                        <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">活动丰富多彩，形式千变万化
+                        </div>
+                        <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">游戏奇乐无穷，环境高雅别致
+                        </div>
+                    </div>
+                </div>
+
+
+                <div>
+                    <div style="margin-top: 20px">
+                        <img src="{% static 'love/images/花顶.jpg' %}" width="100%">
+                        <div class="b"
+                             style="text-align: center;color:#D06873;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                            活动流程
+                        </div>
+                    </div>
+                    <div style="text-align: center;margin: 30px 0px">
+                        <img src="{% static 'love/images/活动流程.png' %}" width="85%">
+                    </div>
+                </div>
+
+                <!-- 费用 -->
+                <div class="m10 b" style="text-align: center;color: #FFD15D;">
+                    <img class="m5" src="{% static 'love/images/icon/费用.png' %}" height="30px" style="margin-top: 1px;">
+                    50元/人 （ 知否会员/DOS校友 40元/人 ）
+                </div>
+            </div>
+
+            <!-- 福利 -->
+            <div style="margin-bottom: 0px">
+                <div style="text-align: center;margin-bottom: 10px"><img src="{% static 'love/images/福利.png' %}"
+                                                                         width="70%"></div>
+                <div style="margin-left: 10px;line-height: 40px">
+                    <div><img class="m5" style="margin-top: -5px" src="{% static 'love/images/icon/礼物.png' %}"
+                              height="30px">前20名奖励知否会员
+                    </div>
+                    <div style="text-align: right;margin-right: 10px"><img style="margin-top: -5px" class="m5"
+                                                                           src="{% static 'love/images/icon/礼物.png' %}"
+                                                                           height="30px">前50名奖励免费上墙
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div style="margin-top: 20px">
+                    <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+                    <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                        知否会员有哪些福利？
+                    </div>
+                </div>
+                <div style="margin-left: 10px">
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">所有活动 8 折优惠（本次活动40元）</div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">免费上墙，海量曝光</div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">免费领取《蔡康永的201节情商课》
+                    </div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">加入官方微信群，自由交流情感话题
+                    </div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">可以为官网资料设置不同的访问权限
+                    </div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">可以查看官网上仅会员可见的异性资料
+                    </div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">发现适合你的另一半，会帮你牵线哦！
+                    </div>
+                </div>
+            </div>
+
+
+                <div style="margin-top: 20px">
+                    <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+                    <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                        上墙是什么意思 ？
+                    </div>
+                      <p style="text-indent:32px" class="textJustify" >上墙即在知否官网、官方公众号、微信朋友圈等自媒体上发布您的征友资料，吸引更多异性联系你！</p>
+                </div>
+
+                <div style="margin-top: 20px">
+                    <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+                    <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                        能认识几位异性 ？
+                    </div>
+                      <p style="text-indent:32px" class="textJustify" >本次活动的男女比例是1:1，每个活动环节都会进行重新分组，所以你将有充足的时间和满满的机会和在场的每一个异性友好又有趣地欢乐互动，本次活动至少可以认识10位异性！</p>
+                </div>
+
+                <div style="margin-top: 20px">
+                    <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+                    <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                        天气不佳有影响吗 ？
+                    </div>
+                      <p style="text-indent:32px" class="textJustify" >知否坚持认为“下雨天不宜谈情说爱”，所以天气不佳时，活动将改期举行！</p>
+                </div>
+
+                <div style="margin-top: 20px">
+                    <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+                    <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                        万一来不到，会退款吗 ？
+                    </div>
+                      <p style="text-align: center" >活动开始一周前请假，支持全额退款！</p>
+                </div>
+
+                <div style="margin-top: 20px">
+                    <img src="{% static 'love/images/小标题.png' %}" width="100%" height="50px">
+                    <div style="text-align: center;color: white;margin-top: -40px;font-size: 20px;margin-bottom: 20px">
+                        还有问题想咨询 ？
+                    </div>
+                      <p style="text-align: center" >加我微信吧 — 13908056224 朝阳 </p>
+                </div>
+
+
+            <div style="text-align: center;font-weight: bold;color: #E30D22;margin:20px 0px;">长按扫码<img
+                    src="{% static 'love/images/code.png' %}" width="50%" style="border-radius: 20px">报名活动
+            </div>
+
+            {#                <div style="text-align: center;margin-bottom: 10px"><img src="{% static 'love/images/知否.png' %}" width="100%"></div>#}
+            {##}
+            {#            <p style="text-align: center;margin-top: -40px;color: #980b16">知所求，得所有，用心爱，可否？</p>#}
+
+
+            <img src="{% static 'love/images/index.png' %}" width="100%" style="border-radius: 30px">
+
+
+        </div>
+
+            <a href="https://jinshuju.net/f/5lFpIi">
+                <div class="flexwidth" style="position: fixed;bottom: 63px;width: 100%;background: #4a98ff;height: 50px;color: white;text-align: center;line-height: 50px">
+                    报名活动
+                </div>
+                </a>
+
+        <div class="tabbar x sq flexwidth">
+
+            <div class="tabbaritem notactive"
+                 onclick="window.open('{% url 'matchlove' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/指示牌.png' %}"
+                          style="margin-left: 8px"></div>
+                <div class="bartext">寻觅</div>
+            </div>
+
+            <div class="tabbaritem ">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/干杯.png' %}"
+                          style="margin-left: 2px"></div>
+                <div class="bartext">活动</div>
+            </div>
+
+
+
+            <div class="tabbaritem notactive" onclick="window.open('{% url 'encounter' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/照片库.png' %}"
+                          style="margin-left: 5px"></div>
+                <div class="bartext">邂逅</div>
+            </div>
+
+
+            <div class="tabbaritem notactive" onclick="window.open('{% url 'me' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/知否.png' %}"></div>
+                <div class="bartext">知否</div>
+            </div>
+
+
+                        {% ifequal vip 6 %}
+            <div class="tabbaritem notactive" onclick="window.open('{% url 'log' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/动态.png' %}"
+                          style="margin-left: 2px"></div>
+                <div class="bartext">动态</div>
+            </div>
+            {% endifequal %}
+
+        </div>
+
+    {% endblock %}

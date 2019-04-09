@@ -1,0 +1,324 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+{% block title %}爱在知否 @ 单身俱乐部 - 知否{% endblock %}
+
+{% block content %}
+
+    <style>
+        .myitem {
+            line-height: 50px;
+            margin: 0 10px;
+            vertical-align: top;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.37);
+            cursor: pointer;
+        }
+
+        .myicon {
+            height: 30px;
+            margin: -2px 15px 0px 5px;
+        }
+
+        .righticon {
+            height: 25px;
+            margin: 13px 0px 0px 0px;
+            float: right;
+        }
+
+        .boya-center {
+            position: absolute;
+            top: 40px;
+            color: white;
+            text-align: center;
+            margin: 0px auto;
+            width: 100%;
+        }
+
+        .girla-center {
+            position: absolute;
+            top: 20px;
+            color: white;
+            text-align: center;
+            margin: 0px auto;
+            width: 100%;
+        }
+
+        .boyavatar {
+            border-radius: 50%;
+            border: 4px solid #014A81;
+            width: 30%;
+            min-width: 100px;
+            margin-bottom: 10px;
+        }
+
+        .girlavatar {
+            border-radius: 50%;
+            border: 4px solid #F06292;
+            width: 30%;
+            min-width: 100px;
+            margin: 10px;
+        }
+
+    </style>
+
+    <div style="margin-bottom: 90px">
+        {% ifequal gender '1' %}
+
+            <div onclick="window.open('{% url 'showMan' %}?backpath={{ request.get_full_path }}','_self');">
+
+                <img src="{% static 'love/images/boy-bg.jpg' %}" width="100%">
+                <div class="boya-center y flexwidth">
+                    <div><img class="boyavatar flexwidth" src="{{ MEDIA_URL }}{{ photopath }}"></div>
+                    <div style="color: white;">{{ name }}</div>
+                </div>
+            </div>
+
+        {% else %}
+            <div onclick="window.open('{% url 'showWoman' %}?backpath={{ request.get_full_path }}','_self');">
+
+                <img src="{% static 'love/images/bg-girl.jpg' %}" width="100%">
+                <div class="girla-center y flexwidth">
+                    <div><img class="girlavatar flexwidth" src="{{ MEDIA_URL }}{{ photopath }}"></div>
+                    <div style="color: #F06292; font-weight: bold;">{{ name }}</div>
+                </div>
+            </div>
+        {% endifequal %}
+
+        <div class="y">
+
+            <div class="myitem copy" data-clipboard-text="发现一款新兴脱单神器——知否，或许能够帮到你!
+
+官网链接
+http://dosjh.club/love
+
+注册时填写邀请码{{ id }}，可以获得知否币奖励哈！" >
+                <img src="{% static 'love/images/icon/链接.png' %}" class="myicon">
+                邀请好友
+                <img src="{% static 'love/images/icon/右灰.png' %}" class="righticon">
+                <span style="float: right">我的邀请码是 {{ id }} </span>
+            </div>
+
+            <div class="myitem" onclick="window.open('{% url 'msg' %}','_self');" >
+                <img src="{% static 'love/images/icon/信.png' %}" class="myicon">
+                {{ msgnum }} 封来信
+                {% ifnotequal newmsgnum 0 %}
+                    <span style="color: #D82008"> + {{ newmsgnum }} </span>
+                {% endifnotequal %}
+                <img src="{% static 'love/images/icon/右灰.png' %}" class="righticon">
+            </div>
+
+            <div class="myitem" onclick="window.open('{% url 'relation' %}?relation=love','_self');">
+                <img src="{% static 'love/images/icon/喜欢.png' %}" class="myicon">
+                {{ lovednum }} 人喜欢我
+                {% ifnotequal addlovednum 0 %}
+                    <span style="color: #D82008"> + {{ addlovednum }} </span>
+                {% endifnotequal %}
+                <img src="{% static 'love/images/icon/右灰.png' %}" class="righticon">
+                <span style="float: right">我喜欢 {{ lovenum }} 人</span>
+            </div>
+
+            <div class="myitem" onclick="window.open('{% url 'relation' %}?relation=look','_self');">
+                <img src="{% static 'love/images/icon/眼镜.png' %}" class="myicon">
+                {{ lookednum }} 人看过我
+                {% ifnotequal addlookednum 0 %}
+                    <span style="color: #D82008">  + {{ addlookednum }} </span>
+                {% endifnotequal %}
+
+                <img src="{% static 'love/images/icon/右灰.png' %}" class="righticon">
+                <span style="float: right">我看过 {{ looknum }} 人</span>
+            </div>
+
+            <div id="showzflist"  class="myitem" >
+                <img src="{% static 'love/images/icon/知否币.png' %}" class="myicon">
+                {{ zfnum |default:0 }} 个知否币
+                {% ifnotequal newzfnum 0 %}
+                    <span style="color: #D82008"> + {{ newzfnum }} </span>
+                {% endifnotequal %}
+                <img src="{% static 'love/images/icon/右灰.png' %}" class="righticon">
+            </div>
+
+            <div hidden  id="zflist" style="border-bottom: 1px solid rgba(128, 128, 128, 0.37);">
+                <div style="margin-left: 20px;color: deeppink">
+                    <div class="x">
+                        <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px"></div>
+                        <div style="width: 85%;margin-top: 10px">每邀请一个朋友加入知否，您和您的朋友都将奖励一个知否币；</div>
+                    </div>
+                    <div class="x">
+                        <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px"></div>
+                        <div style="width: 85%;margin-top: 10px">若您邀请的朋友成为知否会员，您和您的朋友都将奖励5个知否币；</div>
+                    </div>
+
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">1 个知否币 = 1 元人民币</div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">知否币可用于参加活动时抵现哦！</div>
+                </div>
+            </div>
+
+            <div id="showwelfarelist" class="myitem">
+                <img src="{% static 'love/images/icon/会员.png' %}" class="myicon">会员福利
+                <img src="{% static 'love/images/icon/右灰.png' %}" class="righticon">
+            </div>
+
+            <div hidden id="welfarelist" style="border-bottom: 1px solid rgba(128, 128, 128, 0.37);">
+                <div style="margin-left: 20px;color: deeppink">
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">所有活动 8 折优惠</div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">免费上墙，海量曝光</div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">免费领取《蔡康永的201节情商课》
+                    </div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">加入官方微信群，自由交流情感话题
+                    </div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">可以为官网资料设置不同的访问权限
+                    </div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">可以查看官网上仅会员可见的异性资料
+                    </div>
+                    <div><img class="m5" src="{% static 'love/images/icon/对勾.png' %}" height="30px">发现适合你的另一半，会帮你牵线哦！
+                    </div>
+                </div>
+            </div>
+
+
+            <div  onclick="window.open('{% url 'lovebook' %}','_self');" class="myitem">
+                <img src="{% static 'love/images/icon/秘籍.png' %}" class="myicon">脱单秘籍
+                <img src="{% static 'love/images/icon/更新.png' %}" class="myicon">
+                <img src="{% static 'love/images/icon/右灰.png' %}" class="righticon">
+            </div>
+{#            <div id="lovebook" class="textJustify" hidden#}
+{#                 style="margin: 0px 10px;text-align: center;border-bottom: 1px solid rgba(128, 128, 128, 0.37);line-height: 30px;color: #ff59a4">#}
+{#                主动搭讪 — 参加活动 — 学习恋爱 — 敬请期待#}
+{#            </div>#}
+
+            <div class="myitem" onclick="window.open('{% url 'getinfo' %}?action=update','_self');">
+                <img src="{% static 'love/images/icon/信息修改.png' %}" class="myicon"
+                     style="margin-left: 8px;margin-right: 12px">修改资料
+                <img src="{% static 'love/images/icon/右灰.png' %}" class="righticon">
+            </div>
+
+            <div id="setpassword" class="myitem">
+                <img src="{% static 'love/images/icon/密码.png' %}" class="myicon"
+                     style="margin-left: -3px;margin-right: 7px">设置资料访问密码
+                <img src="{% static 'love/images/icon/右灰.png' %}" class="righticon">
+            </div>
+
+            <div id="setpasswordform" hidden style="margin: 0px 10px">
+                <form action="{% url "me" %}?action=setpassword" method="post">
+                    {% csrf_token %}
+                    <div class="x">
+                        <div class="grow"><input required type="password" name="infopassword"
+                                                 placeholder="请输入访问您的情感资料所需的密码!"
+                                                 style="width: 100%"></div>
+                        <div>
+                            <button type="submit">保存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div id="changepassword" class="myitem">
+                <img src="{% static 'love/images/icon/修改密码.png' %}" class="myicon">修改登录密码
+                <img src="{% static 'love/images/icon/右灰.png' %}" class="righticon">
+            </div>
+
+            <div id="editpasswordform" hidden style="margin: 0px 10px">
+                <form action="{% url "me" %}?action=changepassword" method="post">
+                    {% csrf_token %}
+                    <div class="x">
+                        <div class="grow"><input required type="password" name="newpassword" placeholder="请输入新的登录密码!"
+                                                 style="width: 100%"></div>
+                        <div>
+                            <button type="submit">保存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <a href="tel:18140074192" style="text-decoration: none;color: #ff5087; ">
+            <div class="myitem">
+                <img src="{% static 'love/images/icon/红娘.png' %}" class="myicon">知否红娘 — 微信 18140074192
+                <img src="{% static 'love/images/icon/右灰.png' %}" class="righticon">
+            </div>
+            </a>
+            <!-- <a href="http://dosjh.club/love"> -->
+            <div style="text-align: center" onclick="window.open('{% url 'lovelogout' %}','_self');">
+                <button  style="background: #ff5087;margin: 10px;height: 40px;width: 90%;font-size: 14px;margin-top: 40px">
+                    退出登录
+                </button>
+            </div>
+                <!-- </a> -->
+        </div>
+
+    </div>
+
+    <!-- 底栏 -->
+    <div class="tabbar x sq flexwidth">
+
+        <div class="tabbaritem notactive"
+             onclick="window.open('{% url 'matchlove' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/指示牌.png' %}"
+                      style="margin-left: 8px"></div>
+            <div class="bartext">寻觅</div>
+        </div>
+
+        <div class="tabbaritem notactive"
+             onclick="window.open('{% url 'activity' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/干杯.png' %}"
+                      style="margin-left: 2px"></div>
+            <div class="bartext">活动</div>
+        </div>
+
+        <div class="tabbaritem notactive"
+             onclick="window.open('{% url 'encounter' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/照片库.png' %}"
+                      style="margin-left: 5px"></div>
+            <div class="bartext">邂逅</div>
+        </div>
+
+
+        <div class="tabbaritem ">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/知否.png' %}"></div>
+            <div class="bartext">知否</div>
+        </div>
+
+                {% ifequal vip 6 %}
+            <div class="tabbaritem notactive" onclick="window.open('{% url 'log' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/动态.png' %}"
+                          style="margin-left: 2px"></div>
+                <div class="bartext">动态</div>
+            </div>
+            {% endifequal %}
+
+
+    </div>
+{% endblock %}
+
+{% block myjs %}
+    <script>
+        $("#changepassword").click(function () {
+            $("#editpasswordform").slideToggle();
+        });
+        $("#setpassword").click(function () {
+            $("#setpasswordform").slideToggle();
+        });
+        {#$("#showlovebook").click(function () {#}
+        {#    $("#lovebook").slideToggle();#}
+
+        $("#showwelfarelist").click(function () {
+            $("#welfarelist").slideToggle();
+        });
+
+        $("#showzflist").click(function () {
+            $("#zflist").slideToggle();
+        });
+
+    </script>
+
+<!-- 复制到剪贴板 -->
+<script type="text/javascript" src="{% static 'js/clipboard.min.js' %}"></script>
+<script>
+var clipboard = new ClipboardJS('.copy');
+clipboard.on('success', function(e) {
+    alert("邀请函复制成功 \r\n \r\n 快去微信粘贴发送给好友吧！");
+});
+clipboard.on('error', function(e) {
+    console.log(e);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,399 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>知否-单身俱乐部</title>
+
+    <!-- 浏览器图标 -->
+    <link rel="bookmark" type="image/x-icon" href="{% static 'images/dos.ico' %}"/>
+    <link rel="icon" href="{% static 'images/dos.ico' %}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{% static 'images/dos.ico' %}">
+
+    <!-- 手机适配css -->
+    <link rel="stylesheet" href="{% static 'css/mobi.css' %}">
+
+    <!-- jquery -->
+    <script src="static/js/jquery-1.8.3.min.js"></script>
+
+    <!— DOS 的CSS文件-->
+    <link href="{% static 'css/dos.css' %}" rel="stylesheet">
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet">
+
+    <!— Weui-->
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.3/weui.min.css">
+    <script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.4/weui.min.js"></script>
+
+
+    <style>
+        .indexloginbnt {
+            position: absolute;
+            top: 85%;
+            left: 35%;
+            width: 30%;
+            height: 30px;
+            border-radius: 20px;
+            background: pink;
+        }
+
+        body {
+            background: url({% static 'love/images/bg.png' %});
+        }
+
+        /* 模糊*/
+        .blur {
+            -webkit-filter: blur(5px); /* Chrome, Opera */
+            -moz-filter: blur(5px);
+            -ms-filter: blur(5px);
+            filter: blur(5px);
+            filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=5, MakeShadow=false); /* IE6~IE9 */
+        }
+
+.center{
+    display: table;
+    width: 60px;
+    padding: 0 10px;
+    vertical-align: middle;
+}
+
+        .loginform {
+            position: absolute;
+            top: 30%;
+            left: 10%;
+            width: 80%;
+
+        }
+
+        .infoform {
+            position: absolute;
+            top: 10px;
+            width: 90%;
+            left: 5%;
+            color: #FF63B1;
+            text-align: center;
+        }
+
+        input {
+            margin: 10px;
+            height: 40px;
+            border: none;
+        }
+
+        .button {
+            margin: 10px;
+            min-width: 100px;
+            height: 40px;
+            border-radius: 20px;
+            background: #FE88BD;
+            color: white;
+        }
+
+        input[type="radio"] + label::before {
+            content: "\a0"; /*不换行空格*/
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 18px;
+            width: 1em;
+            height: 1em;
+            margin-right: .4em;
+            border-radius: 50%;
+            border: 1px solid #FE88BD;
+            text-indent: .15em;
+            line-height: 1;
+        }
+
+        div.male > input[type="radio"] + label::before {
+            border: 1px solid #00a0e9;
+        }
+
+        div.female > input[type="radio"]:checked + label::before {
+            background-color: #FE88BD;
+            background-clip: content-box;
+            padding: .2em;
+        }
+
+        div.male > input[type="radio"]:checked + label::before {
+            background-color: #00a0e9;
+            background-clip: content-box;
+            padding: .2em;
+        }
+
+        input[type="radio"] {
+            position: absolute;
+            clip: rect(0, 0, 0, 0);
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="flex-center">
+    <div class="unit-1-2 unit-1-on-mobile">
+
+        <!-- 首页 -->
+        <div>
+            <img class="blur" src="static/love/images/bg.png" alt="" width="100%" height="100%">
+            <img id="bgimg" class="blur" src="static/love/images/index.png" alt="" style="margin-top:-10px ">
+
+
+            <button hidden id="indexloginbnt" class="indexloginbnt">登录</button>
+
+            <!-- 登录 -->
+            <div id="loginform" hidden class="loginform">
+                <form action="" class="y ">
+                    <input autofocus type="text" placeholder="请输入您的帐号！">
+                    <input type="password" placeholder="请输入您的密码！">
+                    <input type="password" placeholder="请再次输入您的密码！" hidden id="passwordConfirmInput">
+                    <div class="x sq">
+                        <input id="registerbnt" class="button" type="button" value="注册">
+                        <input id="loginbnt" class="button" type="submit" value="登录">
+                    </div>
+                </form>
+            </div>
+
+            <!-- 完善资料 -->
+            <div id="infoform" class="infoform">
+                <form action="" class="y ">
+                    <img src="static/love/images/infotop.png" alt="" style="margin: 10px 0px">
+
+                    <div hidden></div>
+                    <input autofocus type="text" placeholder="请输入您的姓名！">
+
+                    <div class="x sq">
+                        <div class="male">
+                            <input type="radio" id="male" name="sex"/>
+                            <label for="male" style="color: #00a0e9">男</label>
+                        </div>
+                        <div class="female">
+                            <input type="radio" id="female" checked name="sex"/>
+                            <label for="female" style="color: #FE88BD">女</label>
+                        </div>
+                    </div>
+
+                    <div id="showDatePicker"><input id="birthyear" style="text-align: center" type="number" readonly
+                                                    placeholder="1989">年来到这个世界！
+                    </div>
+
+                    <div>江湖外号“<input type="text" style="text-align: center" placeholder="请输入您的昵称！">”</div>
+                    <div id="showPicker">位列天宫“<input id="constellation" type="text" readonly
+                                                     style="text-align: center"
+                                                     placeholder="白羊座">”
+                    </div>
+
+                    <div class="x sq">
+                        <div><input type="text" readonly style="text-align: center;width: 70px" placeholder="本科">毕业
+                        </div>
+                        <div><input type="text" style="text-align: center;width: 100px" placeholder="四川成都">人</div>
+                    </div>
+                    <div class="x sq">
+                        <div>身高<input type="number" style="text-align: center;width: 40px" placeholder="1.6">cm
+                        </div>
+                        <div>体重<input type="number" style="text-align: center;width: 40px" placeholder="55">kg</div>
+                    </div>
+                    <div>目前是一名<input type="text" style="text-align: center;width: 175px" placeholder="Web前端工程师">
+                    </div>
+
+                    <div class="x sq" style="margin: 0px 5%">
+                        <div>年薪<input type="number" style="text-align: center;width: 40px" placeholder="8">万元</div>
+                        <label><input style="vertical-align: middle;" type="checkbox" name="personality"> 房</label>
+                        <label><input style="vertical-align: middle;" type="checkbox" name="personality"> 车</label>
+                    </div>
+
+                    <div>兴趣爱好有<input type="text" style="text-align: center;width: 175px" placeholder="读书、旅行、交朋友">
+                    </div>
+
+                    <div style="text-align: left;margin-left: 7%">还有，还有：（个人情况、内心独白等）</div>
+                    <textarea cols="3" rows="3"></textarea>
+                    <div>迄今有<input type="number" style="text-align: center;width: 30px" placeholder="2">段感情经历，我的感悟是：
+                    </div>
+                    <textarea cols="3" rows="3"></textarea>
+
+
+                    所以，最适合我的人生伴侣可能是这样的：
+                    <div class=" x sq">
+                        <div>
+                            <input type="number" style="text-align: center;width: 80px" placeholder="22-40">岁
+                        </div>
+                        <div>
+                            <input type="number" style="text-align: center;width: 50px" placeholder="<3">次恋爱
+                        </div>
+                    </div>
+
+                    <div class="x sq">
+                        <div><input type="number" style="text-align: center;width: 80px" placeholder="1.6-1.7">cm</div>
+                        <div><input type="number" style="text-align: center;width: 80px" placeholder="55-65">kg</div>
+                    </div>
+                    <div class="x sq" style="margin: 0px 5%">
+                        <div>年薪<input type="number" style="text-align: center;width: 40px" placeholder="> 6">万元</div>
+                        <label><input checked style="vertical-align: middle;" type="checkbox" name="personality">
+                            房</label>
+                        <label><input style="vertical-align: middle;" type="checkbox" name="personality"> 车</label>
+                    </div>
+                    <div class="x sq">
+                        <div><input type="text" readonly style="text-align: center;width: 70px" placeholder="本科">毕业
+                        </div>
+                        <div><input type="text" style="text-align: center;width: 100px" placeholder="四川成都">人</div>
+                    </div>
+                    <div>喜欢<input type="text" style="text-align: center;width: 70%" placeholder="读书、摄影、琴棋书画"></div>
+                    <div style="text-align: left;margin-left: 7%">如果还有以下特点就更好啦！</div>
+                    <textarea cols="3" rows="3"></textarea>
+
+
+                    <div>我的手机号是：<input type="number" style="text-align: center;" placeholder="139080562224"></div>
+                    <div>我的微信号是：<input type="text" style="text-align: center;" placeholder="139080562224"></div>
+
+
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <div class="weui-uploader">
+                                    <div class="weui-uploader__hd">
+                                        <p class="weui-uploader__title">最后，献上我的靓照 ！</p>
+                                        <div class="weui-uploader__info">0/3</div>
+                                    </div>
+                                    <div class="weui-uploader__bd">
+                                        <ul class="weui-uploader__files" id="uploaderFiles">
+
+
+                                        </ul>
+
+                                        <div class="weui-uploader__input-box">
+                                            <input id="uploaderInput" class="weui-uploader__input" type="file"
+                                                   accept="image/*" multiple/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div style="margin: 20px 0px">
+                        <input id="saveinfo" class="button" type="submit" style="width: 70%;" value="谢谢知否，我来啦！">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#showDatePicker').on('click', function () {
+        weui.datePicker({
+            start: 1960,
+            end: new Date().getFullYear(),
+            onChange: function (result) {
+                $('.weui-picker .weui-picker__bd .weui-picker__group').eq(1).hide();
+                $('.weui-picker .weui-picker__bd .weui-picker__group').eq(2).hide();
+            },
+            onConfirm: function (result) {
+                $('#birthyear').val(result[0]);
+            }
+        });
+    });
+    $('#showPicker').on('click', function () {
+        weui.picker([{
+            label: '白羊座（3.21～4.19）',
+            value: '白羊座',
+        }, {
+            label: '金牛座（4.20～5.20）',
+            value: '金牛座',
+        }, {
+            label: '双子座（5.21～6.21）',
+            value: '双子座',
+        }, {
+            label: '巨蟹座（6.22～7.22）',
+            value: '巨蟹座',
+        }, {
+            label: '狮子座（7.23～8.22）',
+            value: '狮子座',
+        }, {
+            label: '处女座（8.23～9.22）',
+            value: '处女座',
+        }, {
+            label: '天秤座（9.23～10.23）',
+            value: '天秤座',
+        }, {
+            label: '天蝎座（10.24～11.22）',
+            value: '天蝎座',
+        }, {
+            label: '射手座（11.23～12.21）',
+            value: '射手座',
+        }, {
+            label: '摩羯座（12.22～1.19）',
+            value: '摩羯座',
+        }, {
+            label: '水瓶座（1.20～2.18）',
+            value: '水瓶座',
+        }, {
+            label: '双鱼座（2.19～3.20）',
+            value: '双鱼座',
+        }], {
+            onChange: function (result) {
+                console.log(result);
+            },
+            onConfirm: function (result) {
+                $('#constellation').val(result);
+            }
+        });
+    });
+
+
+</script>
+<script type="text/javascript">
+    $(function () {
+        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+            $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+            $uploaderInput = $("#uploaderInput"),
+            $uploaderFiles = $("#uploaderFiles")
+        ;
+        $uploaderInput.on("change", function (e) {
+            var src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+            for (var i = 0, len = files.length; i < len; ++i) {
+                var file = files[i];
+                if (url) {
+                    src = url.createObjectURL(file);
+                } else {
+                    src = e.target.result;
+                }
+                $uploaderFiles.append($(tmpl.replace('#url#', src)));
+            }
+        });
+        $uploaderFiles.on("click", "li", function () {
+            $galleryImg.attr("style", this.getAttribute("style"));
+            $gallery.fadeIn(100);
+        });
+        $gallery.on("click", function () {
+            $gallery.fadeOut(100);
+        });
+    });
+</script>
+</body>
+</html>
+
+
+<script>
+    $("#indexloginbnt").on("click", function () {
+        $("#bgimg").addClass("blur");
+        $("#indexloginbnt").fadeOut();
+        $("#loginform").removeAttr("hidden");
+        $("#loginform").addClass("animated");
+        $("#loginform").addClass("rollIn");
+    });
+
+    $("#registerbnt").on("click", function () {
+        $("#passwordConfirmInput").removeAttr("hidden");
+        $("#passwordConfirmInput").addClass("animated");
+        $("#passwordConfirmInput").addClass("rubberBand");
+        $("#registerbnt").fadeOut();
+        $("#passwordConfirmInput").focus();
+        $("#loginbnt").attr("value", '注册 + 登录');
+    });
+
+</script>
+

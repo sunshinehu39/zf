@@ -1,0 +1,138 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+{% block title %}邂逅爱情 @ 单身俱乐部 - 知否{% endblock %}
+    {% block mycss %}
+            <style>
+        .bg {
+            min-height: auto;
+            background: url({% static 'love\images\邂逅背景.jpg' %});
+            background-size: contain;
+            background-repeat: no-repeat;
+
+        }
+
+        .suspend {
+            position: absolute;
+            top: 17%;
+            text-align: center;
+            width: 100%;
+        }
+
+        .photo {
+            margin: 0 auto;
+            background: white;
+            width: 60%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+            border-radius: 50%;
+        }
+
+        .photo img {
+            padding: 10px;
+            width: 100%;
+
+        }
+
+        .bartext {
+            margin-top: 2px;
+            margin-bottom: -4px;
+            color: #FF5F8B;
+            font-weight: 600;
+        }
+
+
+
+    </style>
+    {% endblock %}
+
+ {% block content %}
+
+        <!— 只邂逅异性-->
+
+
+        {#        <div class="bg" style="">#}
+
+        <img src="{% static 'love\images\邂逅背景.jpg' %}" width="100%">
+
+        <div class="suspend flexwidth" style="margin: 0px auto">
+
+        {% if nobody %}
+           <div class="flexwidth" style=" margin: 0 auto; width: 50%; margin-top: -10%" >
+                <img src="{% static 'love\images\没人.png' %}" >
+            </div>
+        {% else %}
+
+            {% if not is_login %}
+                <a href="{% url 'lovelogin' %}">
+                <div class="photo flexwidth" >
+                    <img src="{% static 'love/images/女版头像范例.jpg' %}" style="border-radius: 50%">
+                </div>
+                </a>
+
+             {% else %}
+
+
+
+            {% ifequal mygender '1' %}
+
+            <div class="photo flexwidth" onclick="window.open('{% url "showWoman" %}?myid={{ yourid }}&backpath={% url "encounter" %}','_self');">
+                <img src="{{ MEDIA_URL }}{{ yourphotopath }}" style="border-radius: 50%">
+            </div>
+
+                    {% else %}
+            <div class="photo flexwidth" onclick="window.open('{% url "showMan" %}?myid={{ yourid }}&backpath={% url "encounter" %}','_self');">
+                <img src="{{ MEDIA_URL }}{{ yourphotopath }}" style="border-radius: 50%">
+            </div>
+            {% endifequal %}
+
+                  {% endif %}
+
+            <div class="x sq " style="margin-top: 40px">
+                <img  onclick="window.open('{% url "encounter" %}?lastid={{ yourid }}&action=notlove','_self');" src="{% static 'love/images/icon/心碎.png' %}" height="49px" style=" filter: grayscale(100%);">
+                <img onclick="window.open('{% url "encounter" %}?lastid={{ yourid }}&action=love','_self');" src="{% static 'love/images/icon/喜欢.png' %}" height="40px" style="margin-top: 5px">
+            </div>
+
+        {% endif %}
+
+        </div>
+
+
+        <div class="tabbar x sq flexwidth">
+
+            <div class="tabbaritem notactive"
+                 onclick="window.open('{% url 'matchlove' %}?fid={{ fid }}&mid={{ mid }}&year={{ year }}&month={{ month }}&tab=年&tag={{ tag }}&ps={{ ps }}&date={{ date }}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/指示牌.png' %}"
+                          style="margin-left: 8px"></div>
+                <div class="bartext">寻觅</div>
+            </div>
+
+            <div class="tabbaritem notactive"
+                 onclick="window.open('{% url 'activity' %}?fid={{ fid }}&mid={{ mid }}&year={{ year }}&month={{ month }}&tab=月&tag={{ tag }}&ps={{ ps }}&date={{ date }}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/干杯.png' %}"
+                          style="margin-left: 2px"></div>
+                <div class="bartext">活动</div>
+            </div>
+
+            <div class="tabbaritem">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/照片库.png' %}"
+                          style="margin-left: 5px"></div>
+                <div class="bartext">邂逅</div>
+            </div>
+
+
+            <div class="tabbaritem notactive" onclick="window.open('{% url 'me' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/知否.png' %}"></div>
+                <div class="bartext">知否</div>
+            </div>
+
+                        {% ifequal vip 6 %}
+            <div class="tabbaritem notactive" onclick="window.open('{% url 'log' %}','_self');">
+                <div><img height="30px" width="30px" src="{% static 'love/images/icon/动态.png' %}"
+                          style="margin-left: 2px"></div>
+                <div class="bartext">动态</div>
+            </div>
+            {% endifequal %}
+
+        </div>
+
+{% endblock %}

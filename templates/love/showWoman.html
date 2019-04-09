@@ -1,0 +1,273 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+{% load lovefilter %}
+
+{% block title %}我的资料 @ 知否-单身俱乐部{% endblock %}
+
+{% block content %}
+
+
+    <style>
+
+        .avatar {
+            border-radius: 50%;
+            border: 4px solid #F06292;
+            width: 30%;
+            min-width: 100px;
+            margin: 10px;
+        }
+
+        .name {
+            color: #F06292;
+            font-weight: bold;
+        }
+
+        .a-center {
+            position: absolute;
+            top: 20px;
+            color: white;
+            text-align: center;
+            margin: 0px auto;
+            width: 100%;
+        }
+
+        .gray {
+            -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
+            filter: grayscale(100%);
+        }
+
+        .tag {
+            border-radius: 20px;
+            border: 1px solid #F06292;
+            background: white;
+            color: #F06292;
+            font-weight: bold;
+        }
+
+        .item {
+            line-height: 40px;
+            vertical-align: middle;
+            padding: 5px 0px;
+            margin: 10px
+        }
+
+        .itemTag {
+            background: url({% static 'love/images/女版标签.png' %});
+            background-size: contain;
+            background-repeat: no-repeat;
+            padding-left: 33px;
+            color: white;
+            width: 110px;
+            font-size: 14px;
+            margin-right: 15px
+        }
+        .baricon {
+            margin: 8px;
+            height: 20px;
+        }
+    </style>
+        <div style="margin-bottom: 80px">
+            <img src="{% static 'love/images/bg-girl.jpg' %}" alt="" width="100%">
+
+            <div class="a-center y flexwidth">
+                <div><img class="avatar flexwidth" src="{{ MEDIA_URL }}{{ photopath }}" ></div>
+                <div class="name">No.{{ id }} {{ info.nickname }}</div>
+            </div>
+
+            <div class="x sq m5">
+                {% for tag in tags %}
+                    {% if tag %}
+                        <button class="tag">{{ tag|cut:" " }}</button>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="x item">
+                <label class="itemTag">缘分匹配</label>
+                <span class="b textoverflow" style="color: #F06292;margin-left: 8px;">{{ matchdegree }}%</span>
+            </div>
+
+            <div class="x item">
+                <label class="itemTag">交友宣言</label>
+                 <div class="b" style="color: #F06292;margin-left: 8px;">{{ info.loveslogan }}</div>
+            </div>
+
+
+            <div class="x item">
+                <label class="itemTag">社会角色</label>
+                <span style="color: rgba(14,14,48,0.7);margin-left: 8px">{{ info.job }}</span>
+            </div>
+
+            <div class="x item">
+                <label class="itemTag">兴趣爱好</label>
+                <span class="textoverflow" style="margin-left: 8px;"> {{ hobbiesother }}</span>
+            </div>
+            <div class="x sq">
+                {% for h in imghobbieslist %}
+                    <div><img src="/static/love/images/hobbies/{{ h }}.png" height="30px" style="margin: 0px 10px;margin-top: 5px"></div>
+                {% endfor %}
+            </div>
+
+            <div class="x item">
+                <label class="itemTag">年龄体型</label>
+                <span style="color: rgba(14,14,48,0.7);margin-left: 8px"> {{ age }}岁&emsp;{{ info.height }}m&emsp;{{ info.stature }}</span>
+            </div>
+
+            <div class="x item">
+                <label class="itemTag">学历背景</label>
+                <span class="textoverflow" style="color: rgba(14,14,48,0.7);margin-left: 8px"> {{ education }} &emsp; {{ info.hometown }}人</span>
+            </div>
+
+            <div class="x item">
+                <label class="itemTag">星座性格</label>
+                <a class="x" href="{{ info.constellation | star_url_girl }}">
+                    <img src="/static/love/images/星座/{{ info.constellation }}.png" alt="" height="30px"
+                         style="margin-left: 10px">
+                    <div style="margin-left: 15px;">{{ info.constellation }}</div>
+                </a>
+                 <p style="text-indent:32px;" class="textJustify">{{ info.constellation | star_signs_girl }}</p>
+            </div>
+
+            <div class="x item">
+                <label class="itemTag">内心独白</label>
+                <img src="{% static 'love/images/icon/表白.png' %}" alt="" height="35px" style="margin-left: 10px">
+                <p style="text-indent:32px;" class="textJustify">{{ info.soliloquy |default:"希望在知否遇到你 ！"  }}</p>
+            </div>
+
+
+        {% if not showmore %}
+            <div style="text-align: center">
+                <button id="askmore"
+                        style="line-height: 50px;height: 50px; font-size: 16px;background:#F06292;border-radius: 25px ">
+                    …… 点我了解经济状况、择偶标准 ……
+                </button>
+            </div>
+
+            <div hidden id="askform" style="margin: 0px 10px">
+                <form action="{% url "showWoman" %}?myid={{ id }}&backpath={{ backpath }}&scrollTop={{ scrollTop }}&relation={{ relation }}" method="post">
+                    {% csrf_token %}
+                    <div class="x">
+                        <div class="grow"><input autofocus required type="password" name="infopassword"
+                                                 placeholder="请输入访问密码!"
+                                                 style="width: 100%"></div>
+                        <div>
+                            <button type="submit">确定</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+
+        {% if showmore %}
+
+        <!-- 经济状况 -->
+        <div class="x item">
+            <label class="itemTag">经济状况</label>
+
+            <span style="color:#eaa412;margin-left: 8px ">年薪{{ info.salary }}万</span>
+
+            {% if info.house %}
+                <img src="{% static 'love/images/icon/house.png' %}" alt="" height="30px"
+                     style="margin: 0px 10px;margin-top: 5px">
+            {% endif %}
+
+            {% if info.car %}
+                <img src="{% static 'love/images/icon/car.png' %}" alt="" height="30px"
+                     style="margin: 0px 10px;margin-top: 5px">
+            {% endif %}
+        </div>
+
+        <!-- 情感经历 -->
+        <div class="x item">
+            <label class="itemTag">情感经历</label>
+            <img src="{% static 'love/images/icon/心伤.png' %}" alt="" height="35px" style="margin-left: 10px">
+            <span style="margin-left: 15px;"> {{ info.lovenum }} 段 </span>
+            <div class="textJustify">
+                <span class="b" style="color: #F06292;margin-left: 32px">感悟 : </span>
+                <span>{{ info.thinklove|default:" 想想" }}</span>
+            </div>
+        </div>
+
+        <style>
+            li {
+                line-height: 40px;
+            }
+        </style>
+
+        <!-- 择偶标准 -->
+        <div class="x item">
+            <label class="itemTag">理想伴侣</label>
+            <img src="{% static 'love/images/icon/小喇叭.png' %}" alt="" height="35px" style="margin-left: 10px">
+
+            <div class="y" style="margin-left: 20px">
+                <div>
+                    <ul>
+                        <li> {{ info.agemin }} - {{ info.agemax }}岁 &emsp; {{ info.heightmin }} - {{ info.heightmax }}m
+                            &emsp; 身型{{ info.yourstature }}</li>
+                        <li>迄今有 {{ info.lovenummin }} - {{ info.lovenummax }} 段感情经历&emsp;&emsp;{{ yourhabit }}</li>
+                        <li>{{ youreducation }}以上学历 &emsp; {{ info.yourhometown |default:" 随便哪里" }}人</li>
+                        <li>年薪不低于 {{ info.salarymin }} 万 &emsp; {{ yourproperty }} </li>
+                        <li>兴趣爱好：{{ yourhobbies }}</li>
+                    </ul>
+                </div>
+                <div class="b">
+                    <img class="m5" src="{% static 'love/images/icon/许愿星.png' %}" height="30px"
+                         style="margin-left: 10px;margin-top: -3px">
+                    若还有以下特点就更好啦：
+                </div>
+
+                <div class="textJustify">
+                    <span style="margin-left: 48px">{{ info.more|default:" 其实没有更多了，重在真心相爱哈！" }}</span>
+                </div>
+
+                <div style=" text-align: center">最后，希望在 {{ info.marrymax }} 年内可以结婚……</div>
+                <div class="b" style="text-align: center;color: deeppink"> 会 是 你 吗 ？</div>
+            </div>
+        </div>
+            {% endif %}
+
+        </div>
+        <!-- 底栏 -->
+        <div class="tabbar x sq flexwidth" style="background: dimgrey">
+
+            <div class="tabbaritem "
+                 onclick="window.open('{{ backpath }}?scrollTop={{ scrollTop }}&relation={{ relation }}&myid={{ id }}','_self');">
+                <div><img class="baricon" src="{% static 'love/images/icon/关闭.png' %}"
+                ></div>
+
+            </div>
+
+            {% ifnotequal userid id %}
+
+            <div class="tabbaritem"  onclick="window.open('{% url 'showWoman' %}?myid={{ id }}&action=changelove&backpath={{ backpath }}&scrollTop={{ scrollTop }}&relation={{ relation }}','_self');" >
+                <div>
+                    {% if love %}
+                    <img class="baricon"  height="25px"  src="{% static 'love/images/icon/喜欢.png' %}">
+                    {% else %}
+                     <img class="baricon" src="{% static 'love/images/icon/白喜欢.png' %}">
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="tabbaritem "
+                  onclick="window.open('{% url "chat" %}?myid={{ id }}&backpath2={% url "showWoman" %}&scrollTop={{ scrollTop }}&relation={{ relation }}&backpath={{ backpath }}','_self');">
+                <div><img class="baricon" src="{% static 'love/images/icon/聊天.png' %}"></div>
+
+            </div>
+{% endifnotequal %}
+
+        </div>
+
+{% endblock %}
+{% block myjs %}
+    <script>
+        $("#askmore").click(function () {
+            $("#askform").slideToggle();
+        });
+                {% if tobottom %}
+        $(function () {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+        {% endif %}
+    </script>
+{% endblock %}

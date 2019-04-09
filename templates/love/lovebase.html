@@ -1,0 +1,80 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title> {% block title %}{% endblock %}</title>
+
+    <!-- 浏览器图标 -->
+    <link rel="bookmark" type="image/x-icon" href="{% static 'love/知否logo.ico' %}"/>
+    <link rel="icon" href="{% static 'love/知否logo.ico' %}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{% static 'love/知否logo.ico' %}">
+
+    <!-- 手机适配css -->
+    <link rel="stylesheet" href="{% static 'css/mobi.css' %}">
+
+    <!-- jquery -->
+    <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+
+    <!— DOS 的CSS文件-->
+    <link href="{% static 'css/dos.css' %}" rel="stylesheet">
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?5c68c1f24ed0dac8f5e022869828990e";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+    <style>
+        .bartext {
+            margin-top: 2px;
+            margin-bottom: -4px;
+            color: #FF5F8B;
+            font-weight: 600;
+        }
+
+        .baricon {
+            margin: 8px;
+            height: 20px;
+        }
+
+        .tag {
+            border-radius: 20px;
+            border: 1px solid #F06292;
+            background: white;
+            color: #F06292;
+            font-weight: bold;
+        }
+
+    </style>
+
+    {% block mycss %}{% endblock %}
+</head>
+<body>
+{% block nav %}{% endblock %}
+
+<div class="flex-center">
+    <div class="unit-1-2 unit-1-on-mobile ">
+    <div class="lovebg">
+        {% block content %}{% endblock %}
+</div>
+    </div>
+</div>
+
+{% block tabbar %}{% endblock %}
+
+</body>
+</html>
+
+
+{% block myjs %}{% endblock %}

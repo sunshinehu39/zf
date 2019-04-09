@@ -1,0 +1,139 @@
+{% extends "love/lovebase.html" %}
+{% load staticfiles %}
+
+<!— 网页标题  -->
+{% block title %}运营记录 @ 知否 - 单身俱乐部  {% endblock %}
+
+<!— 本页样式css  -->
+{% block mycss %}
+    <style>
+        .button {
+            margin: 10px;
+            height: 40px;
+            width: auto;
+            min-width: 80px;
+            border-radius: 20px;
+            background: #FE88BD;
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+
+<!— 主体内容  -->
+{% block content %}
+
+    <form action="{% url 'zflog' %}?action=add" method="post">
+        {% csrf_token %}
+
+
+        <label><input checked type="radio" name="name">朝阳</label>
+        <label><input type="radio" name="name">陈莉丽</label>
+        <label><input type="radio" name="name">王晓艳</label>
+        <label><input type="radio" name="name">王清梅</label>
+        <label><input type="radio" name="name">王飞</label>
+        <label><input type="radio" name="name">王雨</label>
+        <label><input type="radio" name="name">杨永先</label>
+        <label><input type="radio" name="name">杜建南</label>
+
+        <input class="button" type="submit" value="提交">
+
+    </form>
+
+
+
+    <img id="addgoal" src='{% static '\icon\add.png' %}' class="rbfloat"
+         style="cursor: pointer;right: 20px;bottom: 80px">
+
+
+    <style>
+        .lovelist {
+            padding: 10px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
+        {#background: #d7d7d7;#}
+        }
+
+        a:link {
+            text-decoration: none;
+        }
+
+        a:visited {
+            text-decoration: none;
+        }
+
+    </style>
+
+    {% ifequal gender '2' %}
+        {% for i in girllist %}
+
+            <a href="{{ i.url }}">
+                <div class="y lovelist">
+                    <div class="x f12 lr">
+                        <div>
+                            <button style="background: #ff7aa1"> {{ i.tags }}</button>
+                        </div>
+                        <div style="color: rgba(14,14,48,0.66)">源自
+                            <button style="background: rgba(27,46,48,0.57)"> {{ i.source }}</button>
+                        </div>
+                    </div>
+                    <div class="f18 b m5" style="color: rgba(29,25,48,0.89)">{{ i.title }}</div>
+                </div>
+                <div>{{ i.note }}</div>
+            </a>
+
+        {% endfor %}
+
+    {% else %}
+        {% for i in boyllist %}
+
+            <a href="{{ i.url }}">
+                <div class="y lovelist">
+                    <div class="x f12 lr">
+                        <div>
+                            <button style="background: #5994e9"> {{ i.tags }}</button>
+                        </div>
+                        <div style="color: rgba(14,14,48,0.51)">源自
+                            <button style="background:rgba(27,46,48,0.57)"> {{ i.source }}</button>
+                        </div>
+                    </div>
+                    <div class="f18 b m5" style="color: rgba(29,25,48,0.89)">{{ i.title }}</div>
+                </div>
+                <div>{{ i.note }}</div>
+            </a>
+
+        {% endfor %}
+
+    {% endifequal %}
+
+
+
+    <div class="tabbar x sq flexwidth">
+
+        <div class="tabbaritem "
+             onclick="window.open('{% url 'matchlove' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/指示牌.png' %}"
+                      style="margin-left: 8px"></div>
+            <div class="bartext">寻觅</div>
+        </div>
+
+        <div class="tabbaritem " onclick="window.open('{% url 'activity' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/干杯.png' %}"
+                      style="margin-left: 2px"></div>
+            <div class="bartext">活动</div>
+        </div>
+
+        <div class="tabbaritem " onclick="window.open('{% url 'encounter' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/照片库.png' %}"
+                      style="margin-left: 5px"></div>
+            <div class="bartext">邂逅</div>
+        </div>
+
+
+        <div class="tabbaritem " onclick="window.open('{% url 'me' %}','_self');">
+            <div><img height="30px" width="30px" src="{% static 'love/images/icon/知否.png' %}"></div>
+            <div class="bartext">知否</div>
+        </div>
+
+    </div>
+
+{% endblock %}
